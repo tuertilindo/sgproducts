@@ -1,4 +1,5 @@
 import Tags from "./tags";
-import Thumnails from "./thumnails";
-
-export { Tags, Thumnails };
+import Wall from "./wall";
+import Colors from "./colors";
+import Price from "./price";
+export { Tags, Wall, Colors, Price };

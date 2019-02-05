@@ -1,0 +1,13 @@
+.ant-list-item-meta-description {
+  color: rgba(155, 77, 77, 0.45);
+  font-size: 14px;
+  line-height: 22px;
+  width: 250px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ant-list-vertical .ant-list-item-action > li {
+  padding: 0 4px;
+}
