@@ -95,5 +95,26 @@ const ColorHelp = () => (
     </div>
   </Pop>
 );
+const PriceHelp = () => (
+  <Pop title="Precio del prodúcto">
+    <div>
+      <p>
+        El precio está formado por el costo + iva + ganancia <br />
+      </p>
+      <ul>
+        <li />
+      </ul>
+    </div>
+  </Pop>
+);
 
-export { NameHelp, DescHelp, BarcodeHelp, TagsHelp, ImagesHelp, ColorHelp };
+export {
+  NameHelp,
+  DescHelp,
+  BarcodeHelp,
+  TagsHelp,
+  ImagesHelp,
+  ColorHelp,
+  PriceHelp,
+  Pop
+};

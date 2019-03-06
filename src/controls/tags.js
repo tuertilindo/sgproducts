@@ -14,8 +14,11 @@ export default class EditableTagGroup extends React.Component {
 
   handleClose = removedTag => {
     const tags = this.state.tags.filter(tag => tag !== removedTag);
-    const { onListChange } = this.props;
-    if (onListChange) onListChange(tags);
+    const { onListChange, onTagRemoved } = this.props;
+
+    if (onTagRemoved && tags.length < this.state.tags.length)
+      onTagRemoved(removedTag);
+    else if (onListChange) onListChange(tags);
     this.setState({ tags });
   };
 
@@ -25,12 +28,15 @@ export default class EditableTagGroup extends React.Component {
 
   handleInputConfirm = tag => {
     const state = this.state;
-    const { onListChange } = this.props;
+    const { onListChange, onTagAdded } = this.props;
 
     let tags = state.tags;
     if (tag && tags.indexOf(tag) === -1) {
       tags = [...tags, tag];
-      if (onListChange) onListChange(tags);
+
+      if (onTagAdded) {
+        onTagAdded(tag);
+      } else if (onListChange) onListChange(tags);
     }
     this.setState({
       tags,

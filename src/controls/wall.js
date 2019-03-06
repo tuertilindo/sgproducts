@@ -24,11 +24,9 @@ export default class PicturesWall extends React.Component {
     });
   };
 
-  handleChange = ({ fileList }) => this.setState({ fileList });
-
   render() {
     const { previewVisible, previewImage, fileList } = this.state;
-    const { onChange, editable = false, limit = 5 } = this.props;
+    const { onListChange, editable = false, limit = 5 } = this.props;
 
     return (
       <div className="clearfix">
@@ -39,7 +37,10 @@ export default class PicturesWall extends React.Component {
           showUploadList={{ showRemoveIcon: editable }}
           disabled={!editable}
           onPreview={this.handlePreview}
-          onChange={this.handleChange}
+          onChange={({ fileList }) => {
+            if (onListChange) onListChange(fileList);
+            this.setState({ fileList });
+          }}
         >
           {editable && fileList.length < limit ? uploadButton : null}
         </Upload>

@@ -1,6 +1,6 @@
-import ProductsData from "./products";
+import MovsData from "./movs";
 
-let _products = null;
+let _movs = null;
 let instance = null;
 const validate = require("validate.js");
 export default class {
@@ -10,36 +10,36 @@ export default class {
     }
     instance = this;
   }
-  save(product) {
-    let prods = this.getProducts();
-    const count = prods.length;
+  save(mov) {
+    let mvs = this.getMovs();
+    const count = mvs.length;
 
-    if (product.id > 0) {
+    if (mov.id > 0) {
       for (let i = 0; i < count; i++) {
-        if (prods[i].id === product.id) {
-          prods[i] = product;
+        if (mvs[i].id === mov.id) {
+          mvs[i] = mov;
           break;
         }
       }
     } else {
-      product.id = count > 0 ? prods[count - 1].id + 1 : 1;
-      prods.push(product);
+      mov.id = count > 0 ? mvs[count - 1].id + 1 : 1;
+      mvs.push(mov);
     }
-    this.setProducts(prods);
-    return product;
+    this.setMovs(mvs);
+    return mov;
   }
-  delete(product) {
-    let prods = this.getProducts();
-    const count = prods.length;
+  delete(mov) {
+    let mvs = this.getMovs();
+    const count = mvs.length;
 
-    let noItem = prods.filter(el => el.id !== product.id);
-    _products = noItem;
+    let noItem = mvs.filter(el => el.id !== mov.id);
+    _movs = noItem;
 
-    this.setProducts(noItem);
+    this.setMovs(noItem);
     return noItem.length !== count;
   }
 
-  getErrors(product) {
+  getErrors(mov) {
     const constraints = {
       name: {
         presence: true,
@@ -67,23 +67,23 @@ export default class {
         }
       }
     };
-    const rest = validate(product, constraints, { fullMessages: false });
+    const rest = validate(mov, constraints, { fullMessages: false });
 
     return rest || {};
   }
 
-  getProducts(filter) {
-    if (!_products) {
-      const prods = localStorage.getItem("products");
-      _products = JSON.parse(prods) || [];
+  getMovs(filter) {
+    if (!_movs) {
+      const mvs = localStorage.getItem("movs");
+      _movs = JSON.parse(mvs) || [];
     }
-    if (_products.length === 0) {
-      this.setProducts(ProductsData);
+    if (_movs.length === 0) {
+      this.setMovs(MovsData);
     }
     if (filter) {
-      return this.doSearch(_products, filter);
+      return this.doSearch(_movs, filter);
     }
-    return _products;
+    return _movs;
   }
 
   doSearch(s = [], filter = {}) {
@@ -127,14 +127,14 @@ export default class {
         );
       });
     }
-    _products = this.getProducts();
-    return _products;
+    _movs = this.getMovs();
+    return _movs;
   }
 
-  setProducts(prodList) {
+  setMovs(prodList) {
     if (prodList) {
-      _products = prodList;
-      localStorage.setItem("products", JSON.stringify(prodList));
+      _movs = prodList;
+      localStorage.setItem("movs", JSON.stringify(prodList));
     }
   }
 }

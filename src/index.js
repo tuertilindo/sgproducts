@@ -3,15 +3,12 @@ import ReactDOM from "react-dom";
 import "antd/dist/antd.css";
 import "./index.css";
 
-import { cardsData, tagsData, colorsData } from "./data/";
-import ProdInput from "./inputs/product";
-import View from "./views/products";
-
+import Container from "./views/container";
 class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <View />
+        <Container />
       </div>
     );
   }
