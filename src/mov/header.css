@@ -1,0 +1,21 @@
+.movheader {
+  display: inline;
+  text-transform: uppercase;
+  margin: 5px;
+  font-size: 16px;
+  font-weight: bold;
+}
+.movfact {
+  margin: auto;
+  display: block;
+}
+.movclient {
+  text-transform: uppercase;
+}
+
+.movdate {
+  float: right;
+  font-size: small;
+  font-weight: 400;
+  padding: 5px;
+}
