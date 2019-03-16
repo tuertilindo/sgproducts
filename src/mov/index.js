@@ -1,12 +1,12 @@
 import React from "react"
-import { Alert, Collapse, Badge, Row, Col, Button } from "antd"
+import {Alert, Collapse, Badge, Row, Col, Button} from "antd"
 import MovHeader from "./header"
 import MovItems from "./items"
 import MovFooter from "./footer"
 import Pagos from "./pagos"
 import Price from "../product/priceView"
 import "../general/decimal.css"
-import { transformMov, saveMov } from "./util"
+import {transformMov, saveMov} from "./util"
 const Panel = Collapse.Panel
 const moment = require("moment")
 export default class extends React.Component {
@@ -30,9 +30,9 @@ export default class extends React.Component {
       factura,
       errors
     } = mymov
-    const { onClose } = this.props
+    const {onClose} = this.props
     return (
-      <div style={{ maxWidth: "640px", display: "block", margin: "auto" }}>
+      <div style={{maxWidth: "640px", display: "block", margin: "auto"}}>
         <div>
           {errors.map(e => (
             <Alert
@@ -45,7 +45,7 @@ export default class extends React.Component {
           ))}
         </div>
         <MovHeader
-          onSelect={c => this.setState({ target: c })}
+          onSelect={c => this.setState({target: c})}
           mov={mymov}
           onClose={onClose}
         />
@@ -70,7 +70,7 @@ export default class extends React.Component {
             <MovItems
               items={items}
               onDelete={item => {
-                this.setState({ items: items.filter(i => i.id !== item.id) })
+                this.setState({items: items.filter(i => i.id !== item.id)})
               }}
               onAdd={prod => {
                 const {
@@ -88,7 +88,7 @@ export default class extends React.Component {
                   price: price.final || 0,
                   total: parseFloat(count) * parseFloat(price)
                 })
-                this.setState({ items })
+                this.setState({items})
               }}
               onUpdate={item => {
                 for (let i = 0; i < items.length; i++) {
@@ -97,7 +97,7 @@ export default class extends React.Component {
                     break
                   }
                 }
-                this.setState({ items })
+                this.setState({items})
               }}
             />
           </Panel>
@@ -126,7 +126,7 @@ export default class extends React.Component {
                     items[i].newTotal = 0
                   }
                 }
-                this.setState({ items })
+                this.setState({items})
               }}
               descuentos={descuentos}
             />
@@ -149,7 +149,7 @@ export default class extends React.Component {
             key="4"
             extra={<Price value={pagos.pagado} colored />}
           >
-            <Pagos mov={mymov} onUpdate={pagos => this.setState({ pagos })} />
+            <Pagos mov={mymov} onUpdate={pagos => this.setState({pagos})} />
           </Panel>
         </Collapse>
         <Button

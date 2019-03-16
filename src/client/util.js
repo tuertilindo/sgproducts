@@ -1,4 +1,4 @@
-import { searchText } from "../general/"
+import {searchText} from "../general/"
 const validate = require("validate.js")
 const validateClient = client => {
   const constraints = {
@@ -36,15 +36,54 @@ const validateClient = client => {
       }
     }
   }
-  const rest = validate(client, constraints, { fullMessages: false })
+  const rest = validate(client, constraints, {fullMessages: false})
 
   return rest
 }
+const clientStyles = {
+  cliente: {
+    style: {
+      background: "#75FF70",
+      color: "#5E3232"
+    },
+    icon: "shopping-cart"
+  },
+  responsable: {
+    style: {
+      background: "#88C9DD",
+      color: "#2A6046"
+    },
+    icon: "file-ppt"
+  },
+
+  proveedor: {
+    style: {
+      background: "#F9EB85",
+      color: "#5D5832"
+    },
+    icon: "hdd"
+  },
+  sucursal: {
+    style: {
+      background: "#DA8BD3",
+      color: "#52335F"
+    },
+    icon: "cloud-upload"
+  },
+  financiera: {
+    style: {
+      background: "#F99FF1",
+      color: "#5D3C5A"
+    },
+    icon: "inbox"
+  }
+}
+
 const getStyleByClientType = (type, options) => {
   let c = "#556aFF"
   let b = "#ddddfd"
   let i = "edit"
-  const { onlyColor, onlyBack } = options || {}
+  const {onlyColor, onlyBack} = options || {}
   switch (type) {
     case "cliente":
       b = "#66F96D"
@@ -83,7 +122,7 @@ const getStyleByClientType = (type, options) => {
 }
 
 const search = (l, f) => {
-  const { text, type, tags } = f
+  const {text, type, tags} = f
 
   return l.filter(i => {
     return (
@@ -117,4 +156,11 @@ const getClients = () => {
   })
 }
 
-export { getStyleByClientType, search, validateClient, saveClient, getClients }
+export {
+  getStyleByClientType,
+  search,
+  validateClient,
+  saveClient,
+  getClients,
+  clientStyles
+}

@@ -13,8 +13,9 @@
   },
   "keywords": [],
   "name": "productos",
-  "description": null,
-  "version": "0.0.66",
+  "description": "Sgcore Web App",
+  "version": "0.0.88",
+  "homepage": "http://localhost/sgwebapp",
   "devDependencies": {
     "react-scripts": "1.0.0"
   },

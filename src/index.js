@@ -2,6 +2,7 @@ import React from "react"
 import ReactDOM from "react-dom"
 import "antd/dist/antd.css"
 import "./index.css"
+import "./jsonrpcbridge"
 
 import Container from "./container"
 class App extends React.Component {

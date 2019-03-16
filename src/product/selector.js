@@ -1,8 +1,14 @@
 import React from "react"
-import { List as Lista } from "../general"
-import { SidePanel, Filter, isEmptyFilter, getThumbnail } from "../general"
-import { Button, Avatar, Icon, List, Input, Tooltip } from "antd"
-import { search, extractCodes, getStyleByTypeProd, getProducts } from "./util"
+import {List as Lista} from "../general"
+import {SidePanel, Filter, isEmptyFilter, getThumbnail} from "../general"
+import {Button, Avatar, Icon, List, Input, Tooltip, PageHeader} from "antd"
+import {
+  search,
+  extractCodes,
+  getStyleByTypeProd,
+  prodStyles,
+  getProducts
+} from "./util"
 import Stock from "./stockView"
 import Price from "./priceView"
 
@@ -17,24 +23,25 @@ export default class extends React.Component {
 
   componentDidMount() {
     getProducts().then(movs => {
-      this.setState({ data: Object.values(movs), codes: extractCodes(movs) })
+      this.setState({data: Object.values(movs), codes: extractCodes(movs)})
     })
   }
   select(p) {
-    const { onSelect = prod => console.log(prod) } = this.props
+    const {onSelect} = this.props
     this.searchInput.state.value = ""
     onSelect(p)
-    this.setState({ visible: false })
+    this.setState({visible: false})
   }
   render() {
-    const { filter, showAll, data = [], showSide, codes, type } = this.state
+    const {filter, showAll, data = [], showSide, codes, type} = this.state
+    const {justSelect} = this.props
     const searched = isEmptyFilter(filter) ? data : search(data, filter)
     const pstyle = getStyleByTypeProd("producto")
     const cstyle = getStyleByTypeProd("combo")
     return (
       <div>
         <Input
-          prefix={<Icon type="barcode" style={{ color: "rgba(0,0,0,.25)" }} />}
+          prefix={<Icon type="barcode" style={{color: "rgba(0,0,0,.25)"}} />}
           placeholder="Agregar el por código o buscar..."
           hey={Math.random() + "k"}
           allowClear
@@ -48,33 +55,63 @@ export default class extends React.Component {
             } else {
               this.setState({
                 showSide: true,
-                filter: { ...filter, text: s }
+                filter: {...filter, text: s}
               })
             }
           }}
         />
-        <Button.Group size="default">
-          <Tooltip title="Crear un producto" mouseEnterDelay={1}>
-            <Button
-              onClick={() => this.select({})}
-              style={pstyle.style}
-              icon={pstyle.icon}
-              shape="round"
-            >
-              Nuevo Producto
-            </Button>
-          </Tooltip>
-          <Tooltip title="Crear un combo" mouseEnterDelay={1}>
-            <Button
-              onClick={() => this.select({})}
-              style={cstyle.style}
-              icon={cstyle.icon}
-              shape="round"
-            >
-              Nuevo Combo
-            </Button>
-          </Tooltip>
-        </Button.Group>
+        {!justSelect ? (
+          <div>
+            <PageHeader
+              backIcon={<Icon type="search" />}
+              onBack={() =>
+                this.setState({showSide: true, filter: {type: "producto"}})
+              }
+              title="Productos"
+              subTitle="Producto o mercaderias"
+              extra={[
+                <Button
+                  onClick={() => this.select({type: "producto"})}
+                  icon={prodStyles["producto"].icon}
+                  style={prodStyles["producto"].style}
+                  shape="round"
+                />
+              ]}
+            />
+            <PageHeader
+              backIcon={<Icon type="search" />}
+              onBack={() =>
+                this.setState({showSide: true, filter: {type: "combo"}})
+              }
+              title="Combos"
+              subTitle="Multiples productos en uno solo"
+              extra={[
+                <Button
+                  onClick={() => this.select({type: "combo"})}
+                  icon={prodStyles["combo"].icon}
+                  style={prodStyles["combo"].style}
+                  shape="round"
+                />
+              ]}
+            />
+            <PageHeader
+              backIcon={<Icon type="search" />}
+              onBack={() =>
+                this.setState({showSide: true, filter: {type: "servicio"}})
+              }
+              title="Servicios"
+              subTitle="Servicios prestados"
+              extra={[
+                <Button
+                  onClick={() => this.select({type: "servicio"})}
+                  icon={prodStyles["servicio"].icon}
+                  style={prodStyles["servicio"].style}
+                  shape="round"
+                />
+              ]}
+            />
+          </div>
+        ) : null}
 
         <SidePanel
           title={
@@ -90,16 +127,16 @@ export default class extends React.Component {
                   filter={filter}
                   hideType
                   placeholder="Nombre"
-                  onSearch={filter => this.setState({ filter, showAll: false })}
+                  onSearch={filter => this.setState({filter, showAll: false})}
                 />
               }
             />
           }
           onSelect={i => {
             this.select(i)
-            this.setState({ showSide: false, selected: i })
+            this.setState({showSide: false, selected: i})
           }}
-          onClose={() => this.setState({ showSide: false })}
+          onClose={() => this.setState({showSide: false})}
           visible={showSide}
         >
           <Lista
@@ -121,8 +158,8 @@ export default class extends React.Component {
             >
               <Button
                 icon="bars"
-                style={{ marginLeft: "auto" }}
-                onClick={() => this.setState({ showAll: true })}
+                style={{marginLeft: "auto"}}
+                onClick={() => this.setState({showAll: true})}
               >
                 Ver todo
               </Button>

@@ -1,81 +1,27 @@
-import { searchText } from "../../general/"
+import {searchText} from "../../general/"
 import checkIsMercaMov from "./checkIsMercaMov"
 import transformMov from "./transformMov"
 import getDestTypePerMov from "./getDestTypePerMov"
 import saveMov from "./saveMov"
 import getMovs from "./getMovs"
+import MovStyles from "./movStyles"
 const ObjectID = require("bson-objectid")
 var moment = require("moment")
 
 const getStyleByMovType = (type, options) => {
-  let c = "#556aFF"
-  let b = "#ddddfd"
-  let i = "edit"
-  const { onlyColor, onlyBack } = options || {}
-  switch (type) {
-    case "venta":
-      b = "#75FF70"
-      c = "#5E3232"
-      i = "shopping-cart"
-      break
-    case "devolucion":
-      b = "#FB8686"
-      c = "#5F3F3A"
-      i = "eye-invisible"
-      break
-    case "presupuesto":
-      b = "#88C9DD"
-      c = "#2A6046"
-      i = "file-ppt"
-      break
-
-    case "compra":
-      b = "#F9EB85"
-      c = "#5D5832"
-      i = "hdd"
-      break
-    case "retorno":
-      b = "#DA8BD3"
-      c = "#52335F"
-      i = "cloud-upload"
-      break
-    case "pedido":
-      b = "#F99FF1"
-      c = "#5D3C5A"
-      i = "inbox"
-      break
-
-    case "entrada":
-      b = "#FCCD89"
-      c = "#5F4D33"
-      i = "download"
-      break
-    case "salida":
-      b = "#FCAA89"
-      c = "#5F4033"
-      i = "export"
-      break
-
-    default:
-      b = "#8BBBF7"
-      c = "#465D7B"
-      i = "edit"
-      break
-  }
-
-  return {
-    style: {
-      color: onlyBack ? null : c,
-      backgroundColor: onlyColor ? null : b
-    },
-    icon: i
-  }
+  return (
+    MovStyles[type] || {
+      background: "#8BBBF7",
+      color: "#465D7B",
+      icon: "read"
+    }
+  )
 }
 const getStyleByPay = (type, options) => {
   let c = "#556aFF"
   let b = "#ddddfd"
   let i = "edit"
-  const { onlyColor, onlyBack } = options || {}
+  const {onlyColor, onlyBack} = options || {}
   switch (type) {
     case "efectivo":
       b = "#75FF70"
@@ -124,7 +70,7 @@ const getStyleByDesc = (type, options) => {
   let c = "#556aFF"
   let b = "#ddddfd"
   let i = "edit"
-  const { onlyColor, onlyBack, value } = options || {}
+  const {onlyColor, onlyBack, value} = options || {}
   const mtype = type + (value < 0 ? "d" : "u")
   switch (mtype) {
     case "customu":
@@ -171,7 +117,7 @@ const getStyleByDesc = (type, options) => {
 }
 
 const search = (l, f) => {
-  const { text, type, tags } = f
+  const {text, type, tags} = f
 
   return l.filter(i => {
     return (
@@ -186,6 +132,7 @@ const search = (l, f) => {
 const createNewMov = type => {
   return {
     items: [],
+
     code: ObjectID.generate(),
     type: type,
     date: moment().format(),
@@ -203,5 +150,6 @@ export {
   getStyleByDesc,
   getStyleByPay,
   saveMov,
-  getMovs
+  getMovs,
+  MovStyles
 }

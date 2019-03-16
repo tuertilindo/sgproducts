@@ -1,13 +1,13 @@
 import React from "react"
 import "./header.css"
-import { Button, Tooltip, Avatar, Row, Col } from "antd"
-import { getDestTypePerMov, getStyleByMovType } from "./util"
-import { getStyleByClientType } from "../client/util"
+import {Button, Tooltip, Avatar, Row, Col} from "antd"
+import {getDestTypePerMov, getStyleByMovType} from "./util"
+import {getStyleByClientType} from "../client/util"
 import Client from "../client/selector"
 const moment = require("moment")
 export default class extends React.Component {
   render() {
-    const { mov = {}, onClose, onSelect } = this.props
+    const {mov = {}, onClose, onSelect} = this.props
     const {
       target,
       code = "nocode",
@@ -17,17 +17,18 @@ export default class extends React.Component {
       date,
       factura
     } = mov
-    const client = target || { name: "desconocido", type: "responsable" }
+    const client = target || {name: "desconocido", type: "responsable"}
     const cstyle = getStyleByClientType(client.type)
     const mstyle = getStyleByMovType(type)
+
     return (
       <Row gutter={2}>
         <Col span={11}>
           <Client
             justSelect
-            filter={{ type: getDestTypePerMov(type) }}
+            filter={{type: getDestTypePerMov(type)}}
             title={
-              <div className="movheader" style={{ color: cstyle.style.color }}>
+              <div className="movheader" style={{color: cstyle.style.color}}>
                 <Avatar style={cstyle.style} icon={cstyle.icon} size="small" />
                 <span>{client.name}</span>
               </div>
@@ -38,7 +39,7 @@ export default class extends React.Component {
         <Col span={3}>
           <Avatar
             className="movfact"
-            style={{ ...mstyle.style, fontSize: "40px" }}
+            style={{...mstyle.style, fontSize: "40px"}}
             shape="square"
             size={64}
           >
@@ -46,14 +47,14 @@ export default class extends React.Component {
           </Avatar>
         </Col>
         <Col span={9}>
-          <div className="movheader" style={{ color: mstyle.style.color }}>
+          <div className="movheader" style={{color: mstyle.style.color}}>
             <Tooltip
               title="Salir sin guardar"
               mouseEnterDelay={1}
               placement="leftTop"
             >
               <Button
-                style={{ float: "right" }}
+                style={{float: "right"}}
                 size="small"
                 icon="close"
                 shape="circle"
@@ -62,7 +63,7 @@ export default class extends React.Component {
             </Tooltip>
             <span>{type}</span>
             <Avatar
-              style={{ ...mstyle.style, background: "none" }}
+              style={{...mstyle.style, background: "none"}}
               icon={mstyle.icon}
               size={42}
             />

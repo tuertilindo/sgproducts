@@ -1,4 +1,4 @@
-import { searchText } from "../general/"
+import {searchText} from "../general/"
 const validate = require("validate.js")
 
 const validateProduct = product => {
@@ -47,13 +47,13 @@ const validateProduct = product => {
       }
     }
   }
-  const rest = validate(product, constraints, { fullMessages: false })
+  const rest = validate(product, constraints, {fullMessages: false})
 
   return rest
 }
 
 const search = (l, f) => {
-  const { text, type, tags } = f
+  const {text, type, tags} = f
 
   return l.filter(i => {
     return (
@@ -71,12 +71,36 @@ const extractCodes = prods => {
   }
   return ret
 }
+const prodStyles = {
+  producto: {
+    style: {
+      background: "#88C9DD",
+      color: "#2A6046"
+    },
+    icon: "tag"
+  },
+
+  combo: {
+    style: {
+      background: "#F9EB85",
+      color: "#5D5832"
+    },
+    icon: "tags"
+  },
+  servicio: {
+    style: {
+      background: "#F99FF1",
+      color: "#5D3C5A"
+    },
+    icon: "safety-certificate"
+  }
+}
 
 const getStyleByTypeProd = (type, options) => {
   let c = "#556aFF"
   let b = "#ddddfd"
   let i = "edit"
-  const { onlyColor, onlyBack } = options || {}
+  const {onlyColor, onlyBack} = options || {}
   switch (type) {
     case "producto":
       b = "#75FF70"
@@ -138,5 +162,6 @@ export {
   validateProduct,
   getStyleByTypeProd,
   saveProduct,
-  getProducts
+  getProducts,
+  prodStyles
 }

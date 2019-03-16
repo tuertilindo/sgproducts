@@ -1,8 +1,8 @@
 import checkIsMercaMov from "./checkIsMercaMov"
-import { isEmpty } from "../../general"
+import {isEmpty} from "../../general"
 import getDestTypePerMov from "./getDestTypePerMov"
 import calculatePagos from "./calculatePagos"
-
+import {getConfig} from "../../general/"
 export default mov => {
   let {
     items = [],
@@ -65,11 +65,11 @@ export default mov => {
           //calcular combo
           let ncombo = null
           if (combo && nt > 0 && combo.subitems && combo.subitems.length > 0) {
-            const { subitems = [], scalar = 1 } = combo
+            const {subitems = [], scalar = 1} = combo
             let ntotal = 0
             let nsubitems = []
             for (let i = 0; i < subitems.length; i++) {
-              const { count, name, code, price } = subitems[i]
+              const {count, name, code, price} = subitems[i]
               const sbcount = parseFloat(count)
               const sbprice = parseFloat(price)
               const sbtotal = sbcount * sbprice
@@ -122,7 +122,7 @@ export default mov => {
 
       //descuentos
       for (let i = 0; i < descuentos.length; i++) {
-        const { price, codes = [], type } = descuentos[i]
+        const {price, codes = [], type} = descuentos[i]
         const d = parseFloat(price)
         descuentos[i].price = d
 
@@ -171,12 +171,27 @@ export default mov => {
       isEmpty(target.type) ||
       target.type !== destType
     ) {
-      errors.push({
-        index: errors.length,
-        type: "warning",
-        message: "Debe asignar un " + destType + " a este movimiento"
-      })
       target = {}
+      if (type === "venta") {
+        const {ventaTarget, lastClient} = getConfig()
+
+        if (ventaTarget === "consumidor") {
+          target = {
+            name: "Consumidor Final",
+            code: "0000",
+            iva: "monotributo",
+            type: "cliente"
+          }
+        } else if (ventaTarget === "ultimo") {
+          target = lastClient
+        }
+      }
+      if (isEmpty(target))
+        errors.push({
+          index: errors.length,
+          type: "warning",
+          message: "Debe asignar un " + destType + " a este movimiento"
+        })
     }
   }
 
@@ -191,15 +206,22 @@ export default mov => {
     factura = "X"
   }
 
-  const mpagos = calculatePagos(pagos)
+  let mpagos = calculatePagos(pagos)
   const pagado = mpagos.pagado
   const total = subtotal + descontado
   if (total > pagado) {
-    errors.push({
-      index: errors.length,
-      type: "warning",
-      message: "Faltan realizar pagos"
-    })
+    if (type === "venta" && getConfig().autoPagar) {
+      mpagos = {
+        efectivo: {total},
+        pagado: total
+      }
+    } else {
+      errors.push({
+        index: errors.length,
+        type: "warning",
+        message: "Faltan realizar pagos"
+      })
+    }
   }
   if (total < pagado) {
     errors.push({

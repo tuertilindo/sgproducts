@@ -1,6 +1,6 @@
 import React from "react"
-import { Button, Icon } from "antd"
-import { SketchPicker, CirclePicker } from "react-color"
+import {Button} from "antd"
+import {SketchPicker, CirclePicker} from "react-color"
 const popover = {
   position: "relative",
   zIndex: "2"
@@ -24,12 +24,12 @@ export default class ButtonExample extends React.Component {
   }
 
   handleClick = () => {
-    this.setState({ displayColorPicker: !this.state.displayColorPicker })
+    this.setState({displayColorPicker: !this.state.displayColorPicker})
   }
 
   handleClose = () => {
-    const { colors = [] } = this.state
-    const { onListChange } = this.props
+    const {colors = []} = this.state
+    const {onListChange} = this.props
     let color = this.nexColor
     if (color) {
       let ncolors = color ? [...colors.filter(c => c !== color), color] : colors
@@ -42,17 +42,17 @@ export default class ButtonExample extends React.Component {
     }
   }
   handleDelete = (color, event) => {
-    const { onListChange } = this.props
+    const {onListChange} = this.props
     const colors = this.state.colors.filter(c => c.toLowerCase() !== color.hex)
     if (onListChange) onListChange(colors)
-    this.setState({ colors })
+    this.setState({colors})
   }
 
   handleChangeComplete = (color, event) => {
     this.nexColor = color.hex
   }
   render() {
-    const { colors, editable } = this.state
+    const {colors, editable} = this.state
     const size = editable ? 24 : 12
     const spacing = editable ? 8 : 4
     const count = colors.length
@@ -67,7 +67,7 @@ export default class ButtonExample extends React.Component {
         />
         {editable ? (
           <Button
-            style={{ marginTop: "10px", marginBottom: "10px" }}
+            style={{marginTop: "10px", marginBottom: "10px"}}
             onClick={this.handleClick}
             shape="circle"
             icon="plus"
