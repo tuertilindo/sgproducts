@@ -7,13 +7,17 @@ import Tags from "./tags"
 import Wall from "./wall"
 import Colors from "./colors"
 import NameEditor from "./nameEditor"
+import FieldEditor from "./fieldEditor"
+import Selector from "./selector"
 import {getConfig, saveConfig} from "./config"
+import {getEntities, saveEntity, getEntity, removeEntity} from "./entities"
 import {
   isEmpty,
   searchText,
   isEmptyFilter,
   getThumbnail,
-  roundStyle
+  roundStyle,
+  compareFilter
 } from "./util"
 import List from "./list"
 
@@ -34,5 +38,12 @@ export {
   Colors,
   NameEditor,
   saveConfig,
-  getConfig
+  getConfig,
+  FieldEditor,
+  getEntities,
+  saveEntity,
+  getEntity,
+  removeEntity,
+  Selector,
+  compareFilter
 }

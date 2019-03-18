@@ -230,7 +230,17 @@ export default mov => {
       message: "Falta dar vueltos"
     })
   }
-
+  //usuario
+  let createdBy = "origen desconocido"
+  if (user) {
+    createdBy = "creado por " + user.name
+  } else {
+    errors.push({
+      index: errors.length,
+      type: "error",
+      message: "no hay un usuario asociado al movimiento"
+    })
+  }
   let ret = {
     items: nitems,
     name: target.name || "desconocido",
@@ -248,7 +258,8 @@ export default mov => {
     date,
     code,
     factura,
-    user
+    user,
+    createdBy
   }
   return ret
 }

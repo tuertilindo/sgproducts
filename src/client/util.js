@@ -20,6 +20,11 @@ const validateClient = client => {
         tooLong: "La descripción es demasiado larga"
       }
     },
+    email: {
+      email: {
+        message: "No parece un email válido"
+      }
+    },
     code: {
       presence: {
         allowEmpty: false,
@@ -79,88 +84,27 @@ const clientStyles = {
   }
 }
 
-const getStyleByClientType = (type, options) => {
-  let c = "#556aFF"
-  let b = "#ddddfd"
-  let i = "edit"
-  const {onlyColor, onlyBack} = options || {}
-  switch (type) {
-    case "cliente":
-      b = "#66F96D"
-      c = "#265D29"
-      i = "shopping-cart"
-      break
-    case "proveedor":
-      b = "#F9DA66"
-      c = "#5D5226"
-      i = "hdd"
-      break
-    case "sucursal":
-      b = "#F9666B"
-      c = "#5D2628"
-      i = "eye-invisible"
-      break
-    case "responsable":
-      b = "#66F9F3"
-      c = "#265D5B"
-      i = "download"
-      break
-    default:
-      b = "#8BBBF7"
-      c = "#465D7B"
-      i = "edit"
-      break
-  }
-
-  return {
-    style: {
-      color: onlyBack ? null : c,
-      backgroundColor: onlyColor ? null : b
-    },
-    icon: i
-  }
+const getStyleByClientType = type => {
+  return (
+    clientStyles[type] || {
+      style: {
+        background: "#88C9DD",
+        color: "#2A6046"
+      },
+      icon: "file-ppt"
+    }
+  )
 }
 
 const search = (l, f) => {
-  const {text, type, tags} = f
+  const {text, type} = f
 
   return l.filter(i => {
     return (
-      (!text ||
-        text.length === 0 ||
-        searchText(i.name || i.target.name, text)) &&
+      (!text || text.length === 0 || searchText(i.name, text)) &&
       (!type || type === "all" || type === i.type)
     )
   })
 }
-const saveClient = client => {
-  return new Promise((done, error) => {
-    if (!validateClient(client)) {
-      const prods = JSON.parse(localStorage.getItem("clients")) || {}
-      prods[client.code] = client
-      localStorage.setItem("clients", JSON.stringify(prods))
-      done()
-    } else {
-      error()
-    }
-  })
-}
-const getClients = () => {
-  return new Promise((done, error) => {
-    try {
-      const clients = JSON.parse(localStorage.getItem("clients")) || {}
-      done(clients)
-    } catch (e) {
-      error(e.message)
-    }
-  })
-}
 
-export {
-  getStyleByClientType,
-  search,
-  validateClient,
-  saveClient,
-  getClients,
-  clientStyles
-}
+export {getStyleByClientType, search, validateClient, clientStyles}

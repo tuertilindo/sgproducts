@@ -2,7 +2,7 @@ import React from "react"
 import {List as Lista, EditableNumber} from "../general"
 import ItemInfo from "./itemInfo"
 import {Badge, Icon, Button} from "antd"
-import Prodview from "../product/selector"
+import Prodview from "../product/view"
 import "../general/decimal.css"
 export default class extends React.Component {
   render() {

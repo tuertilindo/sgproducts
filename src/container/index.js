@@ -1,12 +1,16 @@
 import React from "react"
 import {Tabs, BackTop} from "antd"
-import Prodsview from "../product/selector"
+import Prodsview from "../product/view"
 import Prodedit from "../product"
-import Clientview from "../client/selector"
+import Clientview from "../client/view"
 import ClientEdit from "../client"
-import Movsview from "../mov/selector"
+import UserView from "../user/view"
+import UserEdit from "../user"
+import Movsview from "../mov/view"
 import Movview from "../mov"
 import Config from "./config"
+import Login from "../user/login"
+import {getEntity} from "../general"
 const TabPane = Tabs.TabPane
 
 export default class extends React.Component {
@@ -15,16 +19,32 @@ export default class extends React.Component {
     this.state = {
       movSelected: null,
       productSelected: null,
-      clientSelected: null
+      clientSelected: null,
+      userSelected: null,
+      userLoged: null
     }
   }
+  componentDidMount() {
+    getEntity(0, "logins").then(logged =>
+      this.setState({userLoged: logged}).catch(e => console.log(e))
+    )
+  }
   render() {
-    const {movSelected, productSelected, clientSelected} = this.state
+    const {
+      movSelected,
+      productSelected,
+      clientSelected,
+      userSelected,
+      userLoged
+    } = this.state
+    if (!userLoged) {
+      return <Login onLogin={u => this.setState({userLoged: u})} />
+    }
     return (
       <div style={{maxWidth: "640px", display: "block", margin: "auto"}}>
         <BackTop style={{right: 5}} visibilityHeight={300} />
 
-        <Tabs defaultActiveKey="4">
+        <Tabs defaultActiveKey="1">
           <TabPane tab="Movimientos" key="1">
             {movSelected ? (
               <Movview
@@ -33,7 +53,10 @@ export default class extends React.Component {
               />
             ) : (
               <div>
-                <Movsview onSelect={m => this.setState({movSelected: m})} />
+                <Movsview
+                  user={userLoged}
+                  onSelect={m => this.setState({movSelected: m})}
+                />
               </div>
             )}
           </TabPane>
@@ -65,7 +88,25 @@ export default class extends React.Component {
               />
             )}
           </TabPane>
-          <TabPane tab="Configuracion" key="4">
+          <TabPane tab="Usuarios" key="4">
+            {userSelected ? (
+              <UserEdit
+                user={userSelected}
+                onCancel={() => this.setState({userSelected: null})}
+              />
+            ) : (
+              <UserView
+                horizontal
+                user={userLoged}
+                showOptions={{
+                  horizontal: true
+                }}
+                onSelect={item => this.setState({userSelected: item})}
+                onLogout={() => this.setState({userLoged: null})}
+              />
+            )}
+          </TabPane>
+          <TabPane tab="Configuracion" key="5">
             <Config />
           </TabPane>
         </Tabs>

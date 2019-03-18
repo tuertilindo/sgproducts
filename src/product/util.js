@@ -57,7 +57,10 @@ const search = (l, f) => {
 
   return l.filter(i => {
     return (
-      (!text || text.length === 0 || searchText(i.name, text)) &&
+      (!text ||
+        text.length === 0 ||
+        searchText(i.name, text) ||
+        searchText(i.description, text)) &&
       (!type || type === "all" || type === i.type)
     )
   })

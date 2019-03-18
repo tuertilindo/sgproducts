@@ -3,7 +3,7 @@ import "./header.css"
 import {Button, Tooltip, Avatar, Row, Col} from "antd"
 import {getDestTypePerMov, getStyleByMovType} from "./util"
 import {getStyleByClientType} from "../client/util"
-import Client from "../client/selector"
+import Client from "../client/view"
 const moment = require("moment")
 export default class extends React.Component {
   render() {
@@ -15,7 +15,8 @@ export default class extends React.Component {
       name,
       description,
       date,
-      factura
+      factura,
+      createdBy
     } = mov
     const client = target || {name: "desconocido", type: "responsable"}
     const cstyle = getStyleByClientType(client.type)
@@ -35,6 +36,9 @@ export default class extends React.Component {
             }
             onSelect={onSelect}
           />
+          <div>
+            <span className="movdate">{createdBy}</span>
+          </div>
         </Col>
         <Col span={3}>
           <Avatar
@@ -69,7 +73,9 @@ export default class extends React.Component {
             />
           </div>
           <div>
-            <span className="movdate">{date}</span>
+            <span className="movdate">
+              {moment(date).format("dddd D [de] MMMM")}
+            </span>
           </div>
         </Col>
       </Row>

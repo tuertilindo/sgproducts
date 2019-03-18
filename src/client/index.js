@@ -1,29 +1,46 @@
 import React from "react"
-import { Card, Collapse, Icon, Badge, Button } from "antd"
-import { validateClient, saveClient } from "./util"
-import { Tags, Wall, HeaderView, isEmpty, NameEditor } from "../general"
+import {Card, Collapse, Icon, Badge, Button} from "antd"
+import {validateClient} from "./util"
+import {
+  Tags,
+  Wall,
+  HeaderView,
+  isEmpty,
+  FieldEditor,
+  saveEntity
+} from "../general"
 const Panel = Collapse.Panel
 export default class extends React.Component {
   constructor(props) {
     super(props)
-    const { client } = props
+    const {client} = props
 
     this.state = client || {}
-    console.log(this.state)
   }
 
   render() {
-    const { dataSource, onSave, onCancel } = this.props
-    let { name, description, code, tags = [], images = [], type } = this.state
-    const errors = validateClient(this.state) || {}
+    const {onCancel} = this.props
+    let {
+      name,
+      description,
+      code,
+      email,
+      address,
+      phone,
+      tags = [],
+      images = [],
+      type
+    } = this.state
+    const errors =
+      validateClient({...this.state, email: email === "" ? null : email}) || {}
+    //email must be null
     return (
       <Card
         title={
           <HeaderView
             onClose={onCancel}
             data={{
-              name,
-              description,
+              name: type,
               images
             }}
           />
@@ -35,13 +52,50 @@ export default class extends React.Component {
           margin: "auto"
         }}
       >
-        <NameEditor
-          error={errors}
-          name={name}
-          description={description}
-          code={code}
-          onChange={u => this.setState(u)}
+        <FieldEditor
+          fields={{
+            name: {
+              value: name,
+              title: "Nómbre",
+              icon: "tag",
+              placeholder: "Nómbre del usuario"
+            },
+            description: {
+              value: description,
+              title: "Descripción",
+              icon: "edit",
+              placeholder: "Descripción",
+              multiline: true
+            },
+            address: {
+              value: address,
+              title: "Dirección",
+              icon: "home",
+              placeholder: "dirección"
+            },
+            code: {
+              value: code,
+              title: "CUIT, DNI o código",
+              icon: "barcode",
+              placeholder: "CUIT"
+            },
+            phone: {
+              value: phone,
+              title: "Teléfono",
+              icon: "phone",
+              placeholder: "teléfono o celular"
+            },
+            email: {
+              value: email,
+              title: "Email",
+              icon: "inbox",
+              placeholder: "correo del usuario"
+            }
+          }}
+          errors={errors}
+          onChange={o => this.setState(o)}
         />
+
         <Collapse defaultActiveKey={[]}>
           <Panel
             header={
@@ -51,17 +105,14 @@ export default class extends React.Component {
             }
             key="2"
             extra={
-              <Badge
-                count={tags.length}
-                style={{ backgroundColor: "#99cc99" }}
-              />
+              <Badge count={tags.length} style={{backgroundColor: "#99cc99"}} />
             }
           >
             <Tags
               editable
               tags={tags}
               dataSource={[]}
-              onListChange={t => this.setState({ tags: t })}
+              onListChange={t => this.setState({tags: t})}
             />
           </Panel>
           <Panel
@@ -74,14 +125,14 @@ export default class extends React.Component {
             extra={
               <Badge
                 count={images.length}
-                style={{ backgroundColor: "#99cc99" }}
+                style={{backgroundColor: "#99cc99"}}
               />
             }
           >
             <Wall
               editable
               files={images}
-              onListChange={t => this.setState({ images: t })}
+              onListChange={t => this.setState({images: t})}
             />
           </Panel>
         </Collapse>
@@ -89,7 +140,12 @@ export default class extends React.Component {
           disabled={!isEmpty(errors)}
           type="primary"
           onClick={() => {
-            saveClient(this.state)
+            saveEntity({
+              entity: this.state,
+              type: "client",
+              getErrors: validateClient,
+              key: code
+            })
             onCancel()
           }}
           icon="save"

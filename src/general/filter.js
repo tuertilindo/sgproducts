@@ -1,6 +1,6 @@
 import React from "react"
 import Tags from "./tags"
-import { Input, Col, Row, Select } from "antd"
+import {Input, Col, Row, Select} from "antd"
 const Search = Input.Search
 
 export default class extends React.Component {
@@ -10,9 +10,9 @@ export default class extends React.Component {
     this.filter = props.filter || {}
   }
   componentDidUpdate(prevProps) {
-    const { text, type } = this.props.filter || {}
+    const {text, type} = this.props.filter || {}
     if (text !== prevProps.filter.text || type !== prevProps.filter.type) {
-      this.filter = this.props.filter
+      this.filter = this.props.filter || {}
       this.onSearch(this.filter)
       if (this.searchRef) {
         this.searchRef.input.state.value = this.props.filter.text
@@ -24,8 +24,8 @@ export default class extends React.Component {
   }
 
   render() {
-    const { placeholder = "buscar", showTags, types, hideType } = this.props
-    const { text, type } = this.filter
+    const {placeholder = "buscar", showTags, types, hideType} = this.props
+    const {text, type} = this.filter
     return (
       <div>
         <Row>
@@ -36,6 +36,7 @@ export default class extends React.Component {
               defaultValue={text}
               onChange={e => {
                 const text = e.target.value
+                console.log(this.filter)
                 this.filter.text = text
                 this.onSearch(this.filter)
               }}
@@ -61,7 +62,7 @@ export default class extends React.Component {
             <Col xs={24} sm={12} md={12} lg={12} xl={12}>
               <Select
                 value={type || "all"}
-                style={{ width: 120 }}
+                style={{width: 120}}
                 onChange={i => {
                   this.filter.type = i
                   this.onSearch(this.filter)

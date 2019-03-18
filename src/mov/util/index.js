@@ -2,8 +2,6 @@ import {searchText} from "../../general/"
 import checkIsMercaMov from "./checkIsMercaMov"
 import transformMov from "./transformMov"
 import getDestTypePerMov from "./getDestTypePerMov"
-import saveMov from "./saveMov"
-import getMovs from "./getMovs"
 import MovStyles from "./movStyles"
 const ObjectID = require("bson-objectid")
 var moment = require("moment")
@@ -117,7 +115,7 @@ const getStyleByDesc = (type, options) => {
 }
 
 const search = (l, f) => {
-  const {text, type, tags} = f
+  const {text, type} = f
 
   return l.filter(i => {
     return (
@@ -129,12 +127,13 @@ const search = (l, f) => {
   })
 }
 
-const createNewMov = type => {
+const createNewMov = (type, user) => {
   return {
     items: [],
 
     code: ObjectID.generate(),
     type: type,
+    user: user,
     date: moment().format(),
     factura: "C"
   }
@@ -149,7 +148,5 @@ export {
   checkIsMercaMov,
   getStyleByDesc,
   getStyleByPay,
-  saveMov,
-  getMovs,
   MovStyles
 }
