@@ -1,6 +1,6 @@
 import React from "react"
-import {Selector} from "../general"
-import {Button, Icon, Input, PageHeader} from "antd"
+import {Selector, LineView, userPermission} from "../general"
+import {Icon, Input} from "antd"
 import {search, getStyleByTypeProd, prodStyles, extractCodes} from "./util"
 class View extends React.Component {
   constructor(props) {
@@ -9,7 +9,8 @@ class View extends React.Component {
     this.codes = extractCodes(data)
   }
   render() {
-    const {showSide, data, filter, onSelect, justSelect} = this.props
+    const {showSide, data, onSelect, justSelect, user} = this.props
+    const permission = userPermission(user)
     return (
       <div>
         <Input
@@ -18,6 +19,7 @@ class View extends React.Component {
           hey={Math.random() + "k"}
           allowClear
           autoFocus
+          disabled={!justSelect && !permission.canAdd}
           ref={r => (this.searchInput = r)}
           onPressEnter={i => {
             const s = i.target.value
@@ -33,47 +35,29 @@ class View extends React.Component {
         />
         {!justSelect ? (
           <div>
-            <PageHeader
-              backIcon={<Icon type="search" />}
-              onBack={() => showSide(true, {type: "producto"})}
-              title="Productos"
-              subTitle="Producto o mercaderias"
-              extra={[
-                <Button
-                  onClick={() => onSelect({type: "producto"})}
-                  icon={prodStyles["producto"].icon}
-                  style={prodStyles["producto"].style}
-                  shape="round"
-                />
-              ]}
+            <LineView
+              allowed={permission.canAdd}
+              title={"Productos"}
+              subtitle={"Producto o mercaderias"}
+              onSearch={() => showSide(true, {type: "producto"})}
+              onClick={() => onSelect({type: "producto"})}
+              customStyle={prodStyles["producto"]}
             />
-            <PageHeader
-              backIcon={<Icon type="search" />}
-              onBack={() => showSide(true, {type: "combo"})}
-              title="Combos"
-              subTitle="Multiples productos en uno solo"
-              extra={[
-                <Button
-                  onClick={() => onSelect({type: "combo"})}
-                  icon={prodStyles["combo"].icon}
-                  style={prodStyles["combo"].style}
-                  shape="round"
-                />
-              ]}
+            <LineView
+              allowed={permission.canAdd}
+              title={"Combos"}
+              subtitle={"Multiples productos en uno solo"}
+              onSearch={() => showSide(true, {type: "combo"})}
+              onClick={() => onSelect({type: "combo"})}
+              customStyle={prodStyles["combo"]}
             />
-            <PageHeader
-              backIcon={<Icon type="search" />}
-              onBack={() => showSide(true, {type: "servicio"})}
-              title="Servicios"
-              subTitle="Servicios prestados"
-              extra={[
-                <Button
-                  onClick={() => onSelect({type: "servicio"})}
-                  icon={prodStyles["servicio"].icon}
-                  style={prodStyles["servicio"].style}
-                  shape="round"
-                />
-              ]}
+            <LineView
+              allowed={permission.canAdd}
+              title={"Servicios"}
+              subtitle={"Servicios prestados"}
+              onSearch={() => showSide(true, {type: "servicio"})}
+              onClick={() => onSelect({type: "servicio"})}
+              customStyle={prodStyles["servicio"]}
             />
           </div>
         ) : null}

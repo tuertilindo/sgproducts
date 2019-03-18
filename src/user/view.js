@@ -1,18 +1,22 @@
 import React from "react"
-import {Selector, removeEntity} from "../general"
-import {Button, Tooltip} from "antd"
-import {search, getStyleByUserType} from "./util"
+import {Selector, removeEntity, userPermission} from "../general"
+import {Button, Tooltip, Tag} from "antd"
+import {search, getStyleByUserType, userStyles} from "./util"
 
 const View = ({showSide, ...props}) => {
-  const {style, className, user, onLogout, onSelect} = props
-
+  const {user, onLogout, onSelect} = props
+  const permission = userPermission(user)
+  const {type} = user
+  const {style} = userStyles[type]
   return (
     <div>
-      <span style={style} className={className}>
-        {user ? user.name : "desconocido"}
+      <span>
+        {user ? user.name + " " : "desconocido "}
+        <Tag style={style}>{type}</Tag>
       </span>
       <Tooltip title="Agregar usuario" mouseEnterDelay={1} placement="right">
         <Button
+          disabled={!permission.isAdmin}
           style={{float: "right"}}
           shape="circle"
           size="small"
@@ -22,6 +26,7 @@ const View = ({showSide, ...props}) => {
       </Tooltip>
       <Tooltip title="Buscar usuario" mouseEnterDelay={1} placement="right">
         <Button
+          disabled={!permission.isAdmin}
           style={{float: "right"}}
           shape="circle"
           size="small"
@@ -57,6 +62,14 @@ export default class extends React.Component {
         placeholder="buscar por nómbre..."
         emptyText="No se encontro ningún usuario"
         emptyIcon="user"
+        types={{
+          all: "Todos",
+          cliente: "Clientes",
+          vendedor: "Vendedores",
+          encargado: "Encargados",
+          contador: "Contadores",
+          admin: "Administradores"
+        }}
         typeStyler={getStyleByUserType}
         search={search}
         onSelect={onSelect}

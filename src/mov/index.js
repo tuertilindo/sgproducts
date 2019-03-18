@@ -6,9 +6,9 @@ import MovFooter from "./footer"
 import Pagos from "./pagos"
 import Price from "../product/priceView"
 import "../general/decimal.css"
-import {transformMov, saveMov} from "./util"
+import {transformMov} from "./util"
+import {saveEntity} from "../general"
 const Panel = Collapse.Panel
-const moment = require("moment")
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -18,17 +18,14 @@ export default class extends React.Component {
   render() {
     const mymov = transformMov(this.state)
     const {
-      name,
       items = [],
       descuentos = [],
       total = 0,
       subtotal = 0,
       descontado,
       pagos,
-      code,
-      type,
-      factura,
-      errors
+      errors,
+      code
     } = mymov
     const {onClose} = this.props
     return (
@@ -156,7 +153,12 @@ export default class extends React.Component {
           disabled={errors.length > 0}
           type="primary"
           onClick={() => {
-            saveMov(this.state)
+            saveEntity({
+              entity: this.state,
+              type: "mov",
+              getErrors: null,
+              key: code
+            })
             onClose()
           }}
           icon="save"

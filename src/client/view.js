@@ -1,11 +1,18 @@
 import React from "react"
-import {Selector} from "../general"
+import {Selector, LineView, userPermission} from "../general"
 import {Button, Icon, Tooltip, PageHeader} from "antd"
 import {search, getStyleByClientType, clientStyles} from "./util"
 
-const View = ({showSide, ...props}) => {
-  const {title, style, className, justSelect, onSelect} = props
-
+const View = ({
+  showSide,
+  title,
+  style,
+  className,
+  user,
+  justSelect,
+  onSelect
+}) => {
+  const permission = userPermission(user)
   return (
     <div>
       <span style={style} className={className}>
@@ -26,75 +33,45 @@ const View = ({showSide, ...props}) => {
       </Tooltip>
       {!justSelect ? (
         <div>
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "cliente"})}
-            title="Clientes"
-            subTitle="Destinatario de las ventas y presupuestos"
-            extra={[
-              <Button
-                onClick={() => onSelect({type: "cliente"})}
-                icon={clientStyles["cliente"].icon}
-                style={clientStyles["cliente"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canAdd}
+            title={"Clientes"}
+            subtitle={"Destinatario de las ventas"}
+            onSearch={() => showSide(true, {type: "cliente"})}
+            onClick={() => onSelect({type: "cliente"})}
+            customStyle={clientStyles["cliente"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "proveedor"})}
-            title="Proveedores"
-            subTitle="Destinatario de las compras"
-            extra={[
-              <Button
-                onClick={() => onSelect({type: "proveedor"})}
-                icon={clientStyles["proveedor"].icon}
-                style={clientStyles["proveedor"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canAdd}
+            title={"Proveedores"}
+            subtitle={"Destinatario de las compras"}
+            onSearch={() => showSide(true, {type: "proveedor"})}
+            onClick={() => onSelect({type: "proveedor"})}
+            customStyle={clientStyles["proveedor"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "sucursal"})}
-            title="Sucursales"
-            subTitle="Lugar de donde proviene la mercaderia"
-            extra={[
-              <Button
-                onClick={() => onSelect({type: "sucursal"})}
-                icon={clientStyles["sucursal"].icon}
-                style={clientStyles["sucursal"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canAdd}
+            title={"Sucursales"}
+            subtitle={"Lugar de donde proviene la mercaderia"}
+            onSearch={() => showSide(true, {type: "sucursal"})}
+            onClick={() => onSelect({type: "sucursal"})}
+            customStyle={clientStyles["sucursal"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "responsable"})}
-            title="Responsables"
-            subTitle="Entidades que manejan el flujo de dinero"
-            extra={[
-              <Button
-                onClick={() => onSelect({type: "responsable"})}
-                icon={clientStyles["responsable"].icon}
-                style={clientStyles["responsable"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canAdd}
+            title={"Responsables"}
+            subtitle={"Entidades que manejan el flujo de dinero"}
+            onSearch={() => showSide(true, {type: "responsable"})}
+            onClick={() => onSelect({type: "responsable"})}
+            customStyle={clientStyles["responsable"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "financiera"})}
-            title="Financieras"
-            subTitle="Entidades bancarias y tarjetas"
-            extra={[
-              <Button
-                onClick={() => onSelect({type: "financiera"})}
-                icon={clientStyles["financiera"].icon}
-                style={clientStyles["financiera"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canAdd}
+            title={"Financieras"}
+            subtitle={"Entidades bancarias y tarjetas"}
+            onSearch={() => showSide(true, {type: "financiera"})}
+            onClick={() => onSelect({type: "financiera"})}
+            customStyle={clientStyles["financiera"]}
           />
         </div>
       ) : null}

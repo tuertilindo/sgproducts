@@ -1,6 +1,6 @@
 import React from "react"
 import {Card, Button, Avatar} from "antd"
-import {validateUser} from "./util"
+import {validateUser, getStyleByUserType} from "./util"
 import {HeaderView, isEmpty, FieldEditor, saveEntity} from "../general"
 export default class extends React.Component {
   constructor(props) {
@@ -14,6 +14,7 @@ export default class extends React.Component {
     const {onCancel} = this.props
     let {name, email, password, type} = this.state
     const errors = validateUser(this.state) || {}
+    const {style} = getStyleByUserType(type)
     return (
       <Card
         title={
@@ -23,6 +24,8 @@ export default class extends React.Component {
             data={{
               name: "USUARIO"
             }}
+            tag={type}
+            tagStyle={style}
           />
         }
         style={{
@@ -57,7 +60,7 @@ export default class extends React.Component {
               value: type,
               title: "Permiso",
               icon: "security-scan",
-              values: ["invitado", "encargado", "contador", "vendedor", "admin"]
+              values: ["cliente", "encargado", "contador", "vendedor", "admin"]
             }
           }}
           errors={errors}

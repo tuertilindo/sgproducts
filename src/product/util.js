@@ -100,40 +100,15 @@ const prodStyles = {
 }
 
 const getStyleByTypeProd = (type, options) => {
-  let c = "#556aFF"
-  let b = "#ddddfd"
-  let i = "edit"
-  const {onlyColor, onlyBack} = options || {}
-  switch (type) {
-    case "producto":
-      b = "#75FF70"
-      c = "#5E3232"
-      i = "tag"
-      break
-    case "combo":
-      b = "#FB8686"
-      c = "#5F3F3A"
-      i = "fall"
-      break
-    case "servicio":
-      b = "#88C9DD"
-      c = "#2A6046"
-      i = "safety-certificate"
-      break
-    default:
-      b = "#8BBBF7"
-      c = "#465D7B"
-      i = "rise"
-      break
-  }
-
-  return {
-    style: {
-      color: onlyBack ? null : c,
-      backgroundColor: onlyColor ? null : b
-    },
-    icon: i
-  }
+  return (
+    prodStyles[type] || {
+      style: {
+        background: "#F99FF1",
+        color: "#5D3C5A"
+      },
+      icon: "safety-certificate"
+    }
+  )
 }
 
 const saveProduct = product => {

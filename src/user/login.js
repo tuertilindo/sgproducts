@@ -73,7 +73,7 @@ export default class extends React.Component {
                 name: "Fake Admin",
                 email: "admin@sgcore.com",
                 password: "ad",
-                role: "admin"
+                type: "admin"
               }
               if (remember) saveEntity({entity: usr, type: "login", key: email})
               onLogin(usr)

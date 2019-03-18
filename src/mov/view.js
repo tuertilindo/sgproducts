@@ -1,128 +1,77 @@
 import React from "react"
-import {Selector} from "../general"
-import {Button, Icon, PageHeader} from "antd"
+import {Selector, LineView, userPermission} from "../general"
 import {search, getStyleByMovType, MovStyles, createNewMov} from "./util"
 
 const View = ({showSide, justSelect, onSelect, user}) => {
   const newMov = t => createNewMov(t, user)
+  const permission = userPermission(user)
   return (
     <div>
       {!justSelect ? (
         <div>
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "venta"})}
-            title="Ventas"
-            subTitle="Ventas a clientes"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("venta"))}
-                icon={MovStyles["venta"].icon}
-                style={MovStyles["venta"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canSell}
+            title={"Ventas"}
+            subtitle={"Ventas a clientes"}
+            onSearch={() => showSide(true, {type: "venta"})}
+            onClick={() => onSelect(newMov("venta"))}
+            customStyle={MovStyles["venta"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "devolucion"})}
-            title="Devoluciones"
-            subTitle="Devolución de mercaderia a clientes"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("devolucion"))}
-                icon={MovStyles["devolucion"].icon}
-                style={MovStyles["devolucion"].style}
-                shape="round"
-                Tooltip="Vender a cliente"
-              />
-            ]}
+          <LineView
+            allowed={permission.canBack}
+            title={"Devoluciones"}
+            subtitle={"Devolución de mercaderia a clientes"}
+            onSearch={() => showSide(true, {type: "devolucion"})}
+            onClick={() => onSelect(newMov("devolucion"))}
+            customStyle={MovStyles["devolucion"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "presupuesto"})}
-            title="Presupuestos"
-            subTitle="Presupuestos a clientes"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("presupuesto"))}
-                icon={MovStyles["presupuesto"].icon}
-                style={MovStyles["presupuesto"].style}
-                shape="round"
-                Tooltip="Vender a cliente"
-              />
-            ]}
+          <LineView
+            allowed={permission.canSell}
+            title={"Presupuestos"}
+            subtitle={"Presupuestos a clientes"}
+            onSearch={() => showSide(true, {type: "presupuesto"})}
+            onClick={() => onSelect(newMov("presupuesto"))}
+            customStyle={MovStyles["presupuesto"]}
           />
-
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "compra"})}
-            title="Compras"
-            subTitle="Compra a proveedor"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("compra"))}
-                icon={MovStyles["compra"].icon}
-                style={MovStyles["compra"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canBuy}
+            title={"Compras"}
+            subtitle={"Compra a proveedor"}
+            onSearch={() => showSide(true, {type: "compra"})}
+            onClick={() => onSelect(newMov("compra"))}
+            customStyle={MovStyles["compra"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "retorno"})}
-            title="Retornos"
-            subTitle="Devolución de mercaderia al proveedor"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("retorno"))}
-                icon={MovStyles["retorno"].icon}
-                style={MovStyles["retorno"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canBuy}
+            title={"Retornos"}
+            subtitle={"Devolución de mercaderia al proveedor"}
+            onSearch={() => showSide(true, {type: "retorno"})}
+            onClick={() => onSelect(newMov("retorno"))}
+            customStyle={MovStyles["retorno"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "pedido"})}
-            title="Pedidos"
-            subTitle="Orden de pedidos al proveedor"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("pedido"))}
-                icon={MovStyles["pedido"].icon}
-                style={MovStyles["pedido"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canBuy}
+            title={"Pedidos"}
+            subtitle={"Orden de pedidos al proveedor"}
+            onSearch={() => showSide(true, {type: "pedido"})}
+            onClick={() => onSelect(newMov("pedido"))}
+            customStyle={MovStyles["pedido"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "entrada"})}
-            title="Entradas"
-            subTitle="Entrada de mercaderia desde sucursal"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("entrada"))}
-                icon={MovStyles["entrada"].icon}
-                style={MovStyles["entrada"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canBuy}
+            title={"Entradas"}
+            subtitle={"Entrada de mercaderia desde sucursal"}
+            onSearch={() => showSide(true, {type: "entrada"})}
+            onClick={() => onSelect(newMov("entrada"))}
+            customStyle={MovStyles["entrada"]}
           />
-          <PageHeader
-            backIcon={<Icon type="search" />}
-            onBack={() => showSide(true, {type: "salida"})}
-            title="Salidas"
-            subTitle="Envios de mercaderia a otra sucursal"
-            extra={[
-              <Button
-                onClick={() => onSelect(newMov("salida"))}
-                icon={MovStyles["salida"].icon}
-                style={MovStyles["salida"].style}
-                shape="round"
-              />
-            ]}
+          <LineView
+            allowed={permission.canBuy}
+            title={"Salidas"}
+            subtitle={"Envios de mercaderia a otra sucursal"}
+            onSearch={() => showSide(true, {type: "salida"})}
+            onClick={() => onSelect(newMov("salida"))}
+            customStyle={MovStyles["salida"]}
           />
         </div>
       ) : null}

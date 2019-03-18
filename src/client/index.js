@@ -1,6 +1,6 @@
 import React from "react"
 import {Card, Collapse, Icon, Badge, Button} from "antd"
-import {validateClient} from "./util"
+import {validateClient, getStyleByClientType} from "./util"
 import {
   Tags,
   Wall,
@@ -40,9 +40,12 @@ export default class extends React.Component {
           <HeaderView
             onClose={onCancel}
             data={{
-              name: type,
+              name: name || type,
+              description: description,
               images
             }}
+            tag={type}
+            tagStyle={getStyleByClientType(type).style}
           />
         }
         style={{

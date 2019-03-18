@@ -1,7 +1,7 @@
 import React from "react"
-import { Avatar, Card, Button, Tooltip } from "antd"
-import { getThumbnail } from "./util"
-const { Meta } = Card
+import {Avatar, Card, Button, Tooltip, Tag} from "antd"
+import {getThumbnail} from "./util"
+const {Meta} = Card
 export default class extends React.Component {
   render() {
     const {
@@ -12,9 +12,11 @@ export default class extends React.Component {
       hideAvatar,
       onEdit,
       editText = "editar",
-      extra
+      extra,
+      tag,
+      tagStyle
     } = this.props
-    const { name, description } = data || {}
+    const {name, description} = data || {}
     let navatar = avatar
     if (!navatar && !hideAvatar) {
       navatar = <Avatar src={getThumbnail(data)} />
@@ -24,7 +26,7 @@ export default class extends React.Component {
         {onClose ? (
           <Tooltip title={closeText} mouseEnterDelay={1} placement="leftTop">
             <Button
-              style={{ float: "right" }}
+              style={{float: "right"}}
               size="small"
               icon="close"
               shape="circle"
@@ -35,13 +37,23 @@ export default class extends React.Component {
         {onEdit ? (
           <Tooltip title={editText} mouseEnterDelay={1} placement="leftTop">
             <Button
-              style={{ float: "right" }}
+              style={{float: "right"}}
               size="small"
               icon="edit"
               shape="circle"
               onClick={() => onEdit(data)}
             />
           </Tooltip>
+        ) : null}
+        {tag ? (
+          <Tag
+            style={{
+              float: "right",
+              ...tagStyle
+            }}
+          >
+            {tag}
+          </Tag>
         ) : null}
         {extra ? (
           <div

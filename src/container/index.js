@@ -10,7 +10,7 @@ import Movsview from "../mov/view"
 import Movview from "../mov"
 import Config from "./config"
 import Login from "../user/login"
-import {getEntity} from "../general"
+import {getEntity, userPermission} from "../general"
 const TabPane = Tabs.TabPane
 
 export default class extends React.Component {
@@ -40,6 +40,7 @@ export default class extends React.Component {
     if (!userLoged) {
       return <Login onLogin={u => this.setState({userLoged: u})} />
     }
+    const permission = userPermission(userLoged)
     return (
       <div style={{maxWidth: "640px", display: "block", margin: "auto"}}>
         <BackTop style={{right: 5}} visibilityHeight={300} />
@@ -48,6 +49,7 @@ export default class extends React.Component {
           <TabPane tab="Movimientos" key="1">
             {movSelected ? (
               <Movview
+                user={userLoged}
                 mov={movSelected}
                 onClose={() => this.setState({movSelected: null})}
               />
@@ -60,30 +62,30 @@ export default class extends React.Component {
               </div>
             )}
           </TabPane>
-          <TabPane tab="Productos" key="2">
+          <TabPane disabled={!permission.canAdd} tab="Productos" key="2">
             {productSelected ? (
               <Prodedit
+                user={userLoged}
                 onCancel={() => this.setState({productSelected: null})}
                 product={productSelected}
               />
             ) : (
               <Prodsview
+                user={userLoged}
                 onSelect={item => this.setState({productSelected: item})}
               />
             )}
           </TabPane>
-          <TabPane tab="Clientes" key="3">
+          <TabPane disabled={!permission.canAdd} tab="Destinatarios" key="3">
             {clientSelected ? (
               <ClientEdit
+                user={userLoged}
                 client={clientSelected}
                 onCancel={() => this.setState({clientSelected: null})}
               />
             ) : (
               <Clientview
-                horizontal
-                showOptions={{
-                  horizontal: true
-                }}
+                user={userLoged}
                 onSelect={item => this.setState({clientSelected: item})}
               />
             )}
@@ -96,17 +98,13 @@ export default class extends React.Component {
               />
             ) : (
               <UserView
-                horizontal
                 user={userLoged}
-                showOptions={{
-                  horizontal: true
-                }}
                 onSelect={item => this.setState({userSelected: item})}
                 onLogout={() => this.setState({userLoged: null})}
               />
             )}
           </TabPane>
-          <TabPane tab="Configuracion" key="5">
+          <TabPane disabled={!permission.isAdmin} tab="Configuracion" key="5">
             <Config />
           </TabPane>
         </Tabs>

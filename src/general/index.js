@@ -20,6 +20,8 @@ import {
   compareFilter
 } from "./util"
 import List from "./list"
+import LineView from "./lineView"
+import userPermission from "../user/permission"
 
 export {
   Filter,
@@ -45,5 +47,7 @@ export {
   getEntity,
   removeEntity,
   Selector,
-  compareFilter
+  compareFilter,
+  LineView,
+  userPermission
 }

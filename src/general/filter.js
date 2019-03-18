@@ -62,7 +62,7 @@ export default class extends React.Component {
             <Col xs={24} sm={12} md={12} lg={12} xl={12}>
               <Select
                 value={type || "all"}
-                style={{width: 120}}
+                style={{width: 150}}
                 onChange={i => {
                   this.filter.type = i
                   this.onSearch(this.filter)
