@@ -1,5 +1,5 @@
 import React from "react"
-import { Statistic, Popover, InputNumber, Icon, Tooltip } from "antd"
+import {Statistic, Popover, InputNumber, Icon, Tooltip} from "antd"
 import "./decimal.css"
 export default class extends React.Component {
   constructor(props) {
@@ -10,10 +10,10 @@ export default class extends React.Component {
   }
 
   componentDidUpdate(prevProps) {
-    const { count } = this.props
-    const { newCount } = this.state
+    const {count} = this.props
+    const {newCount} = this.state
     if (count !== newCount) {
-      this.setState({ newCount: count })
+      this.setState({newCount: count})
     }
   }
   render() {
@@ -29,7 +29,7 @@ export default class extends React.Component {
       name,
       precision = 2
     } = this.props || []
-    const { newCount } = this.state
+    const {newCount} = this.state
     const vstyle = {
       ...{
         color,
@@ -39,9 +39,9 @@ export default class extends React.Component {
       ...valueStyle
     }
     return (
-      <span className="decimalbutton" style={{ display: "inline-grid" }}>
-        <div style={{ margin: "auto" }}>{name}</div>
-        <div style={{ display: "inline-block" }}>
+      <span className="decimalbutton" style={{display: "inline-block"}}>
+        <div style={{margin: "auto"}}>{name}</div>
+        <div style={{display: "inline-block"}}>
           {onUpdate ? (
             <Tooltip title={title} mouseEnterDelay={1} placement="left">
               <Popover
@@ -49,7 +49,7 @@ export default class extends React.Component {
                   <InputNumber
                     autoFocus
                     min={min}
-                    style={{ width: "130px" }}
+                    style={{width: "130px"}}
                     precision={precision}
                     defaultValue={newCount}
                     formatter={value => `${prefix}${value}${suffix}`}
@@ -59,7 +59,7 @@ export default class extends React.Component {
                     onChange={newCount => {
                       if (!isNaN(newCount)) {
                         Promise.resolve(onUpdate(newCount))
-                        this.setState({ newCount })
+                        this.setState({newCount})
                       }
                     }}
                   />
@@ -67,7 +67,7 @@ export default class extends React.Component {
                 trigger="click"
                 title={
                   <span>
-                    <Icon type="dollar" style={{ color: color }} /> {title}
+                    <Icon type="dollar" style={{color: color}} /> {title}
                   </span>
                 }
               >

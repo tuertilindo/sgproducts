@@ -1,7 +1,15 @@
 import React from "react"
 import {Card, Collapse, Icon, Badge, Button} from "antd"
-import {validateProduct, saveProduct, getStyleByTypeProd} from "./util"
-import {Tags, Wall, Colors, HeaderView, isEmpty, NameEditor} from "../general"
+import {validateProduct, getStyleByTypeProd} from "./util"
+import {
+  Tags,
+  Wall,
+  Colors,
+  HeaderView,
+  isEmpty,
+  NameEditor,
+  saveEntity
+} from "../general"
 import PriceEditor from "./priceEditor"
 import Price from "./priceView"
 const Panel = Collapse.Panel
@@ -137,7 +145,12 @@ export default class extends React.Component {
           disabled={!isEmpty(errors)}
           type="primary"
           onClick={() => {
-            saveProduct(this.state)
+            saveEntity({
+              entity: this.state,
+              type: "product",
+              getErrors: validateProduct,
+              key: code
+            })
             onCancel()
           }}
           icon="save"

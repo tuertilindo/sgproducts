@@ -1,20 +1,35 @@
+import {displayError} from "./actions"
 const saveEntity = param => {
   const {entity, type, getErrors, key} = param
   const plural = type + "s"
   const errorCapture = getErrors || (() => false)
+  const errors = errorCapture(entity)
+  if (errors) {
+    return Promise.reject(errors)
+  }
+
+  if (window.externalLoaded) {
+    return window.external.saveEntity(plural, JSON.stringify(entity))
+  }
   return new Promise((done, error) => {
-    if (!errorCapture(entity)) {
+    try {
       const entities = JSON.parse(localStorage.getItem(plural)) || {}
       entities[key] = entity
       localStorage.setItem(plural, JSON.stringify(entities))
       done()
-    } else {
-      error()
+    } catch (e) {
+      error(e)
     }
   })
 }
 
 const getEntities = (entities, filter) => {
+  if (window.externalLoaded) {
+    return window.external
+      .getEntity(entities)
+      .then(l => l.filter(filter))
+      .catch(displayError)
+  }
   return new Promise((done, error) => {
     try {
       const users = JSON.parse(localStorage.getItem(entities)) || {}

@@ -111,35 +111,4 @@ const getStyleByTypeProd = (type, options) => {
   )
 }
 
-const saveProduct = product => {
-  return new Promise((done, error) => {
-    if (!validateProduct(product)) {
-      const prods = JSON.parse(localStorage.getItem("products")) || {}
-      prods[product.code] = product
-      localStorage.setItem("products", JSON.stringify(prods))
-      done()
-    } else {
-      error()
-    }
-  })
-}
-const getProducts = () => {
-  return new Promise((done, error) => {
-    try {
-      const products = JSON.parse(localStorage.getItem("products")) || {}
-      done(products)
-    } catch (e) {
-      error(e.message)
-    }
-  })
-}
-
-export {
-  search,
-  extractCodes,
-  validateProduct,
-  getStyleByTypeProd,
-  saveProduct,
-  getProducts,
-  prodStyles
-}
+export {search, extractCodes, validateProduct, getStyleByTypeProd, prodStyles}

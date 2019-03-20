@@ -25,9 +25,9 @@ export default class extends React.Component {
     }
   }
   componentDidMount() {
-    getEntity(0, "logins").then(logged =>
-      this.setState({userLoged: logged}).catch(e => console.log(e))
-    )
+    getEntity(0, "logins")
+      .then(logged => this.setState({userLoged: logged}))
+      .catch(e => console.log(e))
   }
   render() {
     const {

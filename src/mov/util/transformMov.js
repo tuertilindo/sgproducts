@@ -65,7 +65,7 @@ export default mov => {
           //calcular combo
           let ncombo = null
           if (combo && nt > 0 && combo.subitems && combo.subitems.length > 0) {
-            const {subitems = [], scalar = 1} = combo
+            const {subitems = []} = combo
             let ntotal = 0
             let nsubitems = []
             for (let i = 0; i < subitems.length; i++) {

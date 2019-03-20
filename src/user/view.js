@@ -2,6 +2,7 @@ import React from "react"
 import {Selector, removeEntity, userPermission} from "../general"
 import {Button, Tooltip, Tag} from "antd"
 import {search, getStyleByUserType, userStyles} from "./util"
+import {logout} from "../general/actions"
 
 const View = ({showSide, ...props}) => {
   const {user, onLogout, onSelect} = props
@@ -40,7 +41,7 @@ const View = ({showSide, ...props}) => {
           shape="circle"
           size="small"
           onClick={() => {
-            removeEntity(user.email, "logins")
+            logout(user)
             onLogout()
           }}
           icon="close"

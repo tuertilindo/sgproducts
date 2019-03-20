@@ -8,16 +8,7 @@ const moment = require("moment")
 export default class extends React.Component {
   render() {
     const {mov = {}, onClose, onSelect} = this.props
-    const {
-      target,
-      code = "nocode",
-      type,
-      name,
-      description,
-      date,
-      factura,
-      createdBy
-    } = mov
+    const {target, type, date, factura, createdBy} = mov
     const client = target || {name: "desconocido", type: "responsable"}
     const cstyle = getStyleByClientType(client.type)
     const mstyle = getStyleByMovType(type)

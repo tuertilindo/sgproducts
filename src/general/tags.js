@@ -1,5 +1,5 @@
 import React from "react"
-import { Tag, AutoComplete, Input, Tooltip, Button } from "antd"
+import {Tag, AutoComplete, Input, Tooltip, Button} from "antd"
 
 export default class EditableTagGroup extends React.Component {
   constructor(props) {
@@ -14,21 +14,21 @@ export default class EditableTagGroup extends React.Component {
 
   handleClose = removedTag => {
     const tags = this.state.tags.filter(tag => tag !== removedTag)
-    const { onListChange, onTagRemoved } = this.props
+    const {onListChange, onTagRemoved} = this.props
 
     if (onTagRemoved && tags.length < this.state.tags.length)
       onTagRemoved(removedTag)
     else if (onListChange) onListChange(tags)
-    this.setState({ tags })
+    this.setState({tags})
   }
 
   showInput = () => {
-    this.setState({ inputVisible: true })
+    this.setState({inputVisible: true})
   }
 
   handleInputConfirm = tag => {
     const state = this.state
-    const { onListChange, onTagAdded } = this.props
+    const {onListChange, onTagAdded} = this.props
 
     let tags = state.tags
     if (tag && tags.indexOf(tag) === -1) {
@@ -45,8 +45,8 @@ export default class EditableTagGroup extends React.Component {
   }
 
   render() {
-    const { tags, inputVisible, inputValue, editable } = this.state
-    const { style } = this.props
+    const {tags, inputVisible, editable} = this.state
+    const {style} = this.props
     const dataSource = this.dataSource
     return (
       <span style={style}>
@@ -73,7 +73,7 @@ export default class EditableTagGroup extends React.Component {
           <AutoComplete
             type="text"
             size="small"
-            style={{ width: 78 }}
+            style={{width: 78}}
             onBlur={this.handleInputConfirm}
             onSelect={this.handleInputConfirm}
             dataSource={dataSource}

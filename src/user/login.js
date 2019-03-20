@@ -1,6 +1,7 @@
 import React from "react"
 import {Card, Button, Avatar} from "antd"
 import {validateLoguin} from "./util"
+import {login} from "../general/actions"
 import {
   HeaderView,
   isEmpty,
@@ -78,21 +79,17 @@ export default class extends React.Component {
               if (remember) saveEntity({entity: usr, type: "login", key: email})
               onLogin(usr)
             } else {
-              getEntities(
-                "users",
-                u => u.email === email && u.password === password
-              )
-                .then(u => {
-                  if (u.length > 0) {
-                    const usr = u[0]
-                    if (remember)
-                      saveEntity({entity: usr, type: "login", key: email})
-                    onLogin(usr)
-                  } else {
-                    this.setState({fail: "No te conozco, Bye"})
-                  }
-                })
-                .catch(e => this.setState({fail: e}))
+              login({
+                email,
+                password,
+                remember
+              }).then(u => {
+                if (u) {
+                  onLogin(u)
+                } else {
+                  this.setState({fail: "No te conozco, Bye"})
+                }
+              })
             }
           }}
           icon="save"
