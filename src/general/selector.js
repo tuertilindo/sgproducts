@@ -3,8 +3,9 @@ import {List as Lista, compareFilter} from "../general"
 import SidePanel from "./sidepanel"
 import Filter from "./filter"
 import {isEmptyFilter} from "./util"
-import {getEntities} from "./entities"
 import {Button, Avatar, Icon, List} from "antd"
+
+const getEntities = target => window.sgapi[target]()
 
 export default class extends React.Component {
   constructor(props) {

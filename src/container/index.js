@@ -10,9 +10,9 @@ import Movsview from "../mov/view"
 import Movview from "../mov"
 import Config from "./config"
 import Login from "../user/login"
-import {getEntity, userPermission} from "../general"
+import {userPermission} from "../general"
 const TabPane = Tabs.TabPane
-
+const {logged} = window.sgapi
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -25,10 +25,13 @@ export default class extends React.Component {
     }
   }
   componentDidMount() {
-    getEntity(0, "logins")
-      .then(logged => this.setState({userLoged: logged}))
-      .catch(e => console.log(e))
+    logged()
+      .then(x => {
+        this.setState({userLoged: x})
+      })
+      .catch(e => console.log(e, "error"))
   }
+
   render() {
     const {
       movSelected,

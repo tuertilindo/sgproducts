@@ -1,14 +1,7 @@
 import React from "react"
 import {Card, Collapse, Icon, Badge, Button} from "antd"
 import {validateClient, getStyleByClientType} from "./util"
-import {
-  Tags,
-  Wall,
-  HeaderView,
-  isEmpty,
-  FieldEditor,
-  saveEntity
-} from "../general"
+import {Tags, Wall, HeaderView, isEmpty, FieldEditor} from "../general"
 const Panel = Collapse.Panel
 export default class extends React.Component {
   constructor(props) {
@@ -143,12 +136,7 @@ export default class extends React.Component {
           disabled={!isEmpty(errors)}
           type="primary"
           onClick={() => {
-            saveEntity({
-              entity: this.state,
-              type: "client",
-              getErrors: validateClient,
-              key: code
-            })
+            window.sgapi.saveClient(this.state)
             onCancel()
           }}
           icon="save"

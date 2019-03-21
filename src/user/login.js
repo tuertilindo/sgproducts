@@ -1,14 +1,8 @@
 import React from "react"
 import {Card, Button, Avatar} from "antd"
 import {validateLoguin} from "./util"
-import {login} from "../general/actions"
-import {
-  HeaderView,
-  isEmpty,
-  FieldEditor,
-  saveEntity,
-  getEntities
-} from "../general"
+import {HeaderView, isEmpty, FieldEditor} from "../general"
+
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -76,14 +70,9 @@ export default class extends React.Component {
                 password: "ad",
                 type: "admin"
               }
-              if (remember) saveEntity({entity: usr, type: "login", key: email})
               onLogin(usr)
             } else {
-              login({
-                email,
-                password,
-                remember
-              }).then(u => {
+              window.sgapi.login(email, password, remember).then(u => {
                 if (u) {
                   onLogin(u)
                 } else {

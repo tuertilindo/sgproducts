@@ -10,7 +10,6 @@ import NameEditor from "./nameEditor"
 import FieldEditor from "./fieldEditor"
 import Selector from "./selector"
 import {getConfig, saveConfig} from "./config"
-import {getEntities, saveEntity, getEntity, removeEntity} from "./entities"
 import {
   isEmpty,
   searchText,
@@ -42,10 +41,6 @@ export {
   saveConfig,
   getConfig,
   FieldEditor,
-  getEntities,
-  saveEntity,
-  getEntity,
-  removeEntity,
   Selector,
   compareFilter,
   LineView,

@@ -1,7 +1,7 @@
 import React from "react"
 import {Card, Button, Avatar} from "antd"
 import {validateUser, getStyleByUserType} from "./util"
-import {HeaderView, isEmpty, FieldEditor, saveEntity} from "../general"
+import {HeaderView, isEmpty, FieldEditor} from "../general"
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -71,12 +71,7 @@ export default class extends React.Component {
           disabled={!isEmpty(errors)}
           type="primary"
           onClick={() => {
-            saveEntity({
-              entity: this.state,
-              type: "user",
-              getErrors: validateUser,
-              key: email
-            })
+            window.sgapi.saveUser(this.state)
             onCancel()
           }}
           icon="save"
