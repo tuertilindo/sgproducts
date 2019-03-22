@@ -1,9 +1,9 @@
 import React from "react"
-import {List as Lista, compareFilter} from "../general"
+import {List as Lista, compareFilter, showError} from "../general"
 import SidePanel from "./sidepanel"
 import Filter from "./filter"
 import {isEmptyFilter} from "./util"
-import {Button, Avatar, Icon, List, message} from "antd"
+import {Button, Avatar, Icon, List} from "antd"
 
 const getEntities = target => window.sgapi[target]()
 
@@ -19,17 +19,15 @@ export default class extends React.Component {
 
   componentDidMount() {
     getEntities(this.targetList)
-      .then(movs => {
-        this.setState({data: Object.values(movs)})
-      })
-      .catch(e => message.error(e.message))
+      .then(l => this.setState({data: l}))
+      .catch(showError)
   }
   componentDidUpdate(prevProps, prevState) {
     // only update chart if the data has changed
     if (!prevState.showSide && this.state.showSide) {
-      getEntities(this.targetList).then(movs => {
-        this.setState({data: Object.values(movs)})
-      })
+      getEntities(this.targetList)
+        .then(l => this.setState({data: l}))
+        .catch(showError)
     }
     if (!compareFilter(prevProps.filter, this.props.filter)) {
       this.setState({filter: this.props.filter})

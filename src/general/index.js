@@ -1,4 +1,5 @@
 import Filter from "./filter"
+import message from "antd"
 import SidePanel from "./sidepanel"
 import HeaderView from "./headerView"
 import EditableNumber from "./editableNumber"
@@ -21,7 +22,7 @@ import {
 import List from "./list"
 import LineView from "./lineView"
 import userPermission from "../user/permission"
-
+const showError = e => message.error(e.message)
 export {
   Filter,
   SidePanel,
@@ -44,5 +45,6 @@ export {
   Selector,
   compareFilter,
   LineView,
-  userPermission
+  userPermission,
+  showError
 }

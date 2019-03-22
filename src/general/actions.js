@@ -24,9 +24,9 @@ const getEntities = (entities, filter) => {
   return new Promise((done, error) => {
     try {
       const users = JSON.parse(localStorage.getItem(entities)) || {}
-      done(filter ? Object.values(users).filter(filter) : users)
+      done(filter ? Object.values(users).filter(filter) : Object.values(users))
     } catch (e) {
-      error(e.message)
+      error(e)
     }
   })
 }

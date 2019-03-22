@@ -1,5 +1,5 @@
 import React from "react"
-import {Selector, removeEntity, userPermission} from "../general"
+import {Selector, userPermission, showError} from "../general"
 import {Button, Tooltip, Tag} from "antd"
 import {search, getStyleByUserType, userStyles} from "./util"
 
@@ -40,7 +40,7 @@ const View = ({showSide, ...props}) => {
           shape="circle"
           size="small"
           onClick={() => {
-            window.sgapi.logout(user)
+            window.sgapi.logout(user).catch(showError)
             onLogout()
           }}
           icon="close"
