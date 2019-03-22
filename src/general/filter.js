@@ -36,7 +36,6 @@ export default class extends React.Component {
               defaultValue={text}
               onChange={e => {
                 const text = e.target.value
-                console.log(this.filter)
                 this.filter.text = text
                 this.onSearch(this.filter)
               }}

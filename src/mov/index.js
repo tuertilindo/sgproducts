@@ -7,7 +7,6 @@ import Pagos from "./pagos"
 import Price from "../product/priceView"
 import "../general/decimal.css"
 import {transformMov} from "./util"
-import {saveEntity} from "../general"
 const Panel = Collapse.Panel
 export default class extends React.Component {
   constructor(props) {
@@ -24,8 +23,7 @@ export default class extends React.Component {
       subtotal = 0,
       descontado,
       pagos,
-      errors,
-      code
+      errors
     } = mymov
     const {onClose} = this.props
     return (
@@ -153,12 +151,7 @@ export default class extends React.Component {
           disabled={errors.length > 0}
           type="primary"
           onClick={() => {
-            saveEntity({
-              entity: this.state,
-              type: "mov",
-              getErrors: null,
-              key: code
-            })
+            window.sgapi.saveMov(this.state)
             onClose()
           }}
           icon="save"

@@ -145,12 +145,7 @@ export default class extends React.Component {
           disabled={!isEmpty(errors)}
           type="primary"
           onClick={() => {
-            saveEntity({
-              entity: this.state,
-              type: "product",
-              getErrors: validateProduct,
-              key: code
-            })
+            window.sgapi.saveProduct(this.state)
             onCancel()
           }}
           icon="save"

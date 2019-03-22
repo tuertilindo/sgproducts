@@ -12,7 +12,6 @@ import Config from "./config"
 import Login from "../user/login"
 import {userPermission} from "../general"
 const TabPane = Tabs.TabPane
-const {logged} = window.sgapi
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -25,11 +24,12 @@ export default class extends React.Component {
     }
   }
   componentDidMount() {
-    logged()
+    window.sgapi
+      .logged()
       .then(x => {
         this.setState({userLoged: x})
       })
-      .catch(e => console.log(e, "error"))
+      .catch(() => this.setState({userLoged: null}))
   }
 
   render() {

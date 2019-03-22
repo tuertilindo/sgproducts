@@ -1,3 +1,4 @@
+import {isEmpty} from "./util"
 const saveEntity = param => {
   const {entity, type, getErrors, key} = param
   const plural = type + "s"
@@ -47,11 +48,20 @@ const api = {
   login: (email, password, remember) => {
     return getEntities("users").then(usrs => {
       const usr = usrs[email]
-      if (remember) saveEntity({entity: usr, type: "login", key: email})
-      return usr
+      if (password === usr.password) {
+        if (remember) localStorage.setItem("logged", JSON.stringify(usr))
+        return Promise.resolve(usr)
+      }
+      return Promise.reject({message: "Las credenciales no coinciden"})
     })
   },
-  logged: () => getEntities("logins").then(u => u[0]),
+  logged: () => {
+    const user = JSON.parse(localStorage.getItem("logged")) || {}
+    if (!isEmpty(user)) {
+      return Promise.resolve(user)
+    }
+    return Promise.reject()
+  },
 
   logout: user => {
     removeEntity(user.email, "logins")
@@ -61,13 +71,13 @@ const api = {
     return getEntities("movs")
   },
   products: () => {
-    return getEntities("movs")
+    return getEntities("products")
   },
   clients: () => {
-    return getEntities("movs")
+    return getEntities("clients")
   },
   users: () => {
-    return getEntities("movs")
+    return getEntities("users")
   },
   saveClient: client => {
     return saveEntity({
