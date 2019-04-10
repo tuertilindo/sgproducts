@@ -151,7 +151,7 @@ export default class extends React.Component {
           disabled={errors.length > 0}
           type="primary"
           onClick={() => {
-            window.sgapi.saveMov(this.state)
+            window.sgapi.saveEntity(this.state, "movs")
             onClose()
           }}
           icon="save"

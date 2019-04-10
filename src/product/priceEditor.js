@@ -1,5 +1,5 @@
 import React from "react"
-import { Switch, Card, Alert } from "antd"
+import {Switch, Card, Alert} from "antd"
 import Number from "../general/editableNumber"
 import "../general/decimal.css"
 
@@ -9,11 +9,11 @@ export default class extends React.Component {
     this.state = props.price || {}
   }
   changeCost(price, cost) {
-    const { gain = 0 } = price
-    return { ...price, cost, final: cost * (1 + gain / 100) }
+    const {gain = 0} = price
+    return {...price, cost, final: cost * (1 + gain / 100)}
   }
   changeGain(price, gain) {
-    const { cost = 0, dolar = 0 } = price
+    const {cost = 0, dolar = 0} = price
     return {
       ...price,
       gain,
@@ -22,26 +22,26 @@ export default class extends React.Component {
     }
   }
   changeDolar(price, dolar) {
-    const { gain = 0 } = price
-    return { ...price, dolar, dolarFinal: dolar * (1 + gain / 100) }
+    const {gain = 0} = price
+    return {...price, dolar, dolarFinal: dolar * (1 + gain / 100)}
   }
   changePrice(price, final) {
-    const { cost = 0, gain = 0 } = price
+    const {cost = 0, gain = 0} = price
     const calcFinal = cost * (1 + gain / 100)
     if (cost > 0 && gain > 0 && final >= calcFinal) {
-      return { ...price, gain: ((final - cost) * 100) / cost, final }
+      return {...price, gain: ((final - cost) * 100) / cost, final}
     } else if (cost > 0 && gain === 0 && final >= cost) {
-      return { ...price, cost: final, final }
+      return {...price, cost: final, final}
     } else if (cost > 0 && gain === 0 && final < cost) {
-      return { ...price, final: cost }
+      return {...price, final: cost}
     } else if (cost > 0 && gain > 0 && final < calcFinal) {
-      return { ...price, final: calcFinal }
+      return {...price, final: calcFinal}
     }
-    return { ...price, gain: 0, final, cost: final }
+    return {...price, gain: 0, final, cost: final}
   }
 
   doUpdate(price) {
-    const newPrice = { ...this.state, ...price }
+    const newPrice = {...this.state, ...price}
     const {
       dolarizado = false,
       dolarFinal = 0,
@@ -50,8 +50,8 @@ export default class extends React.Component {
     } = newPrice
 
     const total = dolarizado ? dolarFinal * cotizacion : final
-    const finalPrice = { ...newPrice, total }
-    const { onPriceUpdate } = this.props
+    const finalPrice = {...newPrice, total}
+    const {onPriceUpdate} = this.props
     if (onPriceUpdate) onPriceUpdate(finalPrice)
     this.setState(finalPrice)
   }
@@ -67,10 +67,9 @@ export default class extends React.Component {
       dolarFinal = 0,
       total = 0
     } = this.state
-    const { error } = this.props
+    const {error} = this.props
     return (
       <Card>
-        {error ? <Alert type="error" message={error} banner /> : null}
         <div>
           <Number
             prefix="$"
@@ -117,7 +116,7 @@ export default class extends React.Component {
             color="#22bb66"
             count={cotizacion}
             title="Cambiar La cotización"
-            onUpdate={v => this.doUpdate({ cotizacion: v })}
+            onUpdate={v => this.doUpdate({cotizacion: v})}
           />
 
           <Number
@@ -134,7 +133,7 @@ export default class extends React.Component {
           <Switch
             defaultChecked={dolarizado}
             onChange={dolarizado => {
-              this.doUpdate({ dolarizado })
+              this.doUpdate({dolarizado})
             }}
             checkedChildren="dolar"
             unCheckedChildren="pesos"
@@ -148,6 +147,7 @@ export default class extends React.Component {
             count={total}
           />
         </div>
+        {error ? <Alert type="error" message={error} banner /> : null}
       </Card>
     )
   }

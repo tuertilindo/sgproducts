@@ -5,8 +5,6 @@ import Filter from "./filter"
 import {isEmptyFilter} from "./util"
 import {Button, Avatar, Icon, List} from "antd"
 
-const getEntities = target => window.sgapi[target]()
-
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -18,14 +16,16 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    getEntities(this.targetList)
+    window.sgapi
+      .getEntities(this.targetList)
       .then(l => this.setState({data: l}))
       .catch(showError)
   }
   componentDidUpdate(prevProps, prevState) {
     // only update chart if the data has changed
     if (!prevState.showSide && this.state.showSide) {
-      getEntities(this.targetList)
+      window.sgapi
+        .getEntities(this.targetList)
         .then(l => this.setState({data: l}))
         .catch(showError)
     }
