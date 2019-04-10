@@ -1,5 +1,5 @@
 import Filter from "./filter"
-import message from "antd"
+import {message} from "antd"
 import SidePanel from "./sidepanel"
 import HeaderView from "./headerView"
 import EditableNumber from "./editableNumber"

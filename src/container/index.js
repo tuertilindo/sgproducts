@@ -23,14 +23,6 @@ export default class extends React.Component {
       userLoged: null
     }
   }
-  componentDidMount() {
-    window.sgapi
-      .logged()
-      .then(x => {
-        this.setState({userLoged: x})
-      })
-      .catch(() => this.setState({userLoged: null}))
-  }
 
   render() {
     const {

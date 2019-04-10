@@ -45,6 +45,19 @@ const removeEntity = (key, group) => {
 }
 
 const api = {
+  saveEntity: (entity, type) => {
+    const key = entity._id || entity.code
+    return new Promise((done, error) => {
+      try {
+        const entities = JSON.parse(localStorage.getItem(type)) || {}
+        entities[key] = entity
+        localStorage.setItem(type, JSON.stringify(entities))
+        done()
+      } catch (e) {
+        error(e)
+      }
+    })
+  },
   login: (email, password, remember) => {
     return getEntities("users").then(usrs => {
       const usr = usrs[email]
