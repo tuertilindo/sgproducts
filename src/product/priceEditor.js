@@ -1,43 +1,13 @@
 import React from "react"
 import {Switch, Card, Alert} from "antd"
 import Number from "../general/editableNumber"
+import {changePrice, changeDolar, changeGain, changeCost} from "./util"
 import "../general/decimal.css"
 
 export default class extends React.Component {
   constructor(props) {
     super(props)
     this.state = props.price || {}
-  }
-  changeCost(price, cost) {
-    const {gain = 0} = price
-    return {...price, cost, final: cost * (1 + gain / 100)}
-  }
-  changeGain(price, gain) {
-    const {cost = 0, dolar = 0} = price
-    return {
-      ...price,
-      gain,
-      final: cost * (1 + gain / 100),
-      dolarFinal: dolar * (1 + gain / 100)
-    }
-  }
-  changeDolar(price, dolar) {
-    const {gain = 0} = price
-    return {...price, dolar, dolarFinal: dolar * (1 + gain / 100)}
-  }
-  changePrice(price, final) {
-    const {cost = 0, gain = 0} = price
-    const calcFinal = cost * (1 + gain / 100)
-    if (cost > 0 && gain > 0 && final >= calcFinal) {
-      return {...price, gain: ((final - cost) * 100) / cost, final}
-    } else if (cost > 0 && gain === 0 && final >= cost) {
-      return {...price, cost: final, final}
-    } else if (cost > 0 && gain === 0 && final < cost) {
-      return {...price, final: cost}
-    } else if (cost > 0 && gain > 0 && final < calcFinal) {
-      return {...price, final: calcFinal}
-    }
-    return {...price, gain: 0, final, cost: final}
   }
 
   doUpdate(price) {
@@ -77,7 +47,7 @@ export default class extends React.Component {
             name="Costo"
             count={cost}
             title="Cambiar costo"
-            onUpdate={v => this.doUpdate(this.changeCost(this.state, v))}
+            onUpdate={v => this.doUpdate(changeCost(this.state, v))}
           />
           <Number
             prefix="%"
@@ -86,7 +56,7 @@ export default class extends React.Component {
             min={0}
             count={gain}
             title="Cambiar ganancia"
-            onUpdate={v => this.doUpdate(this.changeGain(this.state, v))}
+            onUpdate={v => this.doUpdate(changeGain(this.state, v))}
           />
           <Number
             prefix="$"
@@ -94,7 +64,7 @@ export default class extends React.Component {
             name="Precio"
             count={final}
             title="Cambiar el precio final"
-            onUpdate={v => this.doUpdate(this.changePrice(this.state, v))}
+            onUpdate={v => this.doUpdate(changePrice(this.state, v))}
           />
         </div>
         <div>
@@ -106,7 +76,7 @@ export default class extends React.Component {
             color="#22bb22"
             count={dolar}
             title="Cambiar el costo en dolares"
-            onUpdate={v => this.doUpdate(this.changeDolar(this.state, v))}
+            onUpdate={v => this.doUpdate(changeDolar(this.state, v))}
           />
           <Number
             prefix="%"

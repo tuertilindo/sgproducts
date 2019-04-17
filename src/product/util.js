@@ -111,4 +111,67 @@ const getStyleByTypeProd = (type, options) => {
   )
 }
 
-export {search, extractCodes, validateProduct, getStyleByTypeProd, prodStyles}
+const changeCost = (price, cost) => {
+  const {gain = 0} = price
+  return {...price, cost, final: cost * (1 + gain / 100)}
+}
+const changeGain = (price, gain) => {
+  const {cost = 0, dolar = 0} = price
+  return {
+    ...price,
+    gain,
+    final: cost * (1 + gain / 100),
+    dolarFinal: dolar * (1 + gain / 100)
+  }
+}
+const changeDolar = (price, dolar) => {
+  const {gain = 0} = price
+  return {...price, dolar, dolarFinal: dolar * (1 + gain / 100)}
+}
+const changePrice = (price, final) => {
+  const {cost = 0, gain = 0} = price
+  const calcFinal = cost * (1 + gain / 100)
+  if (cost > 0 && gain > 0 && final >= calcFinal) {
+    return {...price, gain: ((final - cost) * 100) / cost, final}
+  } else if (cost > 0 && gain === 0 && final >= cost) {
+    return {...price, cost: final, final}
+  } else if (cost > 0 && gain === 0 && final < cost) {
+    return {...price, final: cost}
+  } else if (cost > 0 && gain > 0 && final < calcFinal) {
+    return {...price, final: calcFinal}
+  }
+  return {...price, gain: 0, final, cost: final}
+}
+const updatePrice = (price, final) => {
+  const {
+    dolarizado = false,
+    dolarFinal = 0,
+    cotizacion = 0,
+    cost = 0,
+    gain = 0
+  } = price
+  const calcFinal = cost * (1 + gain / 100)
+  if (cost > 0 && gain > 0 && final >= calcFinal) {
+    return {...price, gain: ((final - cost) * 100) / cost, final}
+  } else if (gain === 0) {
+    return {...price, cost: final, final}
+  } else if (cost > 0 && gain > 0 && final < calcFinal) {
+    return {...price, costo: final / (1 + gain / 100)}
+  }
+
+  const total = dolarizado ? dolarFinal * cotizacion : final
+  return {...price, total}
+}
+
+export {
+  changePrice,
+  changeDolar,
+  changeGain,
+  changeCost,
+  search,
+  extractCodes,
+  validateProduct,
+  getStyleByTypeProd,
+  prodStyles,
+  updatePrice
+}

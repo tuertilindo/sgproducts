@@ -2,6 +2,7 @@ import React from "react"
 import {Selector, LineView, userPermission} from "../general"
 import {Icon, Input} from "antd"
 import {search, getStyleByTypeProd, prodStyles, extractCodes} from "./util"
+import PriceView from "./priceView"
 class View extends React.Component {
   constructor(props) {
     super(props)
@@ -86,6 +87,7 @@ export default class extends React.Component {
         typeStyler={getStyleByTypeProd}
         search={search}
         onSelect={onSelect}
+        extraList={[item => <PriceView product={item} />]}
       >
         <View {...this.props} />
       </Selector>

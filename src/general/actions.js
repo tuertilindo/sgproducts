@@ -10,6 +10,18 @@ const getEntities = (entities, filter) => {
     }
   })
 }
+const getEntity = (key, entities) => {
+  return new Promise((done, error) => {
+    try {
+      const users = JSON.parse(localStorage.getItem(entities)) || {}
+      const item = users[key]
+      if (item) done(item)
+      else error({message: "no se encontro el item"})
+    } catch (e) {
+      error(e)
+    }
+  })
+}
 
 const removeEntity = (key, group) => {
   return new Promise((done, error) => {
@@ -26,7 +38,7 @@ const removeEntity = (key, group) => {
 
 const api = {
   saveEntity: (entity, type) => {
-    const key = entity._id || entity.code
+    const key = entity._id || entity.code || entity.email
     return new Promise((done, error) => {
       try {
         const entities = JSON.parse(localStorage.getItem(type)) || {}
@@ -38,29 +50,30 @@ const api = {
       }
     })
   },
+  getEntity,
   getEntities,
   removeEntity,
 
-  login: (email, password, remember) => {
+  login: (email, password) => {
     return getEntities("users").then(usrs => {
-      const usr = usrs[email]
-      if (password === usr.password) {
-        if (remember) localStorage.setItem("logged", JSON.stringify(usr))
-        return Promise.resolve(usr)
-      }
+      const found = usrs.filter(
+        u => u.email === email && u.password === password
+      )
+      if (found.length > 0) return Promise.resolve(found[0])
       return Promise.reject({message: "Las credenciales no coinciden"})
     })
   },
   logged: () => {
-    const user = JSON.parse(localStorage.getItem("logged")) || {}
-    if (!isEmpty(user)) {
-      return Promise.resolve(user)
-    }
-    return Promise.reject()
+    return getEntities("logged").then(user => {
+      if (!isEmpty(user)) {
+        return Promise.resolve(user[0])
+      }
+      return Promise.reject()
+    })
   },
 
   logout: user => {
-    removeEntity(user.email, "logins")
+    return removeEntity(user.email, "logins")
   }
 }
 export default api

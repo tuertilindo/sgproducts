@@ -90,14 +90,25 @@ export default class extends React.Component {
                 }
                 onLogin(usr)
               } else {
-                window.sgapi.login(email, password, remember).then(u => {
-                  if (u) {
-                    onLogin(u)
-                    this.setState({loading: false})
-                  } else {
+                window.sgapi
+                  .login(email, password)
+                  .then(u => {
+                    if (u) {
+                      if (remember) {
+                        window.sgapi.saveEntity(u, "logged")
+                      }
+                      onLogin(u)
+                      this.setState({loading: false})
+                    } else {
+                      this.setState({
+                        fail: "No te conozco, Bye",
+                        loading: false
+                      })
+                    }
+                  })
+                  .catch(f =>
                     this.setState({fail: "No te conozco, Bye", loading: false})
-                  }
-                })
+                  )
                 this.setState({loading: true})
               }
             }}

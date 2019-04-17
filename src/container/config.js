@@ -1,6 +1,7 @@
 import React from "react"
 import {Switch, PageHeader, Select} from "antd"
 import {getConfig, saveConfig} from "../general"
+import ProdFeed from "../product/feed"
 const Option = Select.Option
 
 export default class extends React.Component {
@@ -41,6 +42,7 @@ export default class extends React.Component {
             />
           ]}
         />
+        <ProdFeed />
       </div>
     )
   }

@@ -51,7 +51,8 @@ export default class extends React.Component {
       typeStyler,
       search,
       placement,
-      hideType
+      hideType,
+      extraList
     } = this.props
 
     const {filter, showAll, data = [], showSide} = this.state
@@ -98,6 +99,7 @@ export default class extends React.Component {
             emptyIcon={emptyIcon || "frown"}
             typeStyler={typeStyler}
             items={showAll ? searched : searched.slice(0, 10)}
+            extraList={extraList}
           />
           {searched.length > 10 && !showAll ? (
             <div
