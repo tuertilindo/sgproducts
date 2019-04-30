@@ -1,7 +1,7 @@
 import React from "react"
 import {Card, Button, Avatar} from "antd"
 import {validateUser, getStyleByUserType} from "./util"
-import {HeaderView, isEmpty, FieldEditor} from "../general"
+import {HeaderView, isEmpty, FieldEditor, showError} from "../general"
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -69,7 +69,7 @@ export default class extends React.Component {
           disabled={!isEmpty(errors)}
           type="primary"
           onClick={() => {
-            window.sgapi.saveEntity(this.state, "users")
+            window.sgapi.saveEntity(this.state, "users").catch(showError)
             onCancel()
           }}
           icon="save"

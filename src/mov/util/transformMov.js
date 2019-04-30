@@ -1,8 +1,8 @@
-import checkIsMercaMov from "./checkIsMercaMov";
-import { isEmpty } from "../../general";
-import getDestTypePerMov from "./getDestTypePerMov";
-import calculatePagos from "./calculatePagos";
-import { getConfig } from "../../general/";
+import checkIsMercaMov from "./checkIsMercaMov"
+import {isEmpty} from "../../general"
+import getDestTypePerMov from "./getDestTypePerMov"
+import calculatePagos from "./calculatePagos"
+import {getConfig} from "../../general/"
 export default mov => {
   let {
     items = [],
@@ -16,14 +16,14 @@ export default mov => {
     code,
     factura,
     user
-  } = mov;
+  } = mov
 
-  let nitems = [];
-  let customDescuentos = [];
-  let ivas = {};
-  let subtotal = 0;
-  let descontado = 0;
-  let errors = [];
+  let nitems = []
+  let customDescuentos = []
+  let ivas = {}
+  let subtotal = 0
+  let descontado = 0
+  let errors = []
   if (checkIsMercaMov(type)) {
     if (items.length > 0) {
       //items
@@ -36,21 +36,21 @@ export default mov => {
           iva = 21,
           newPrice,
           combo
-        } = items[i];
+        } = items[i]
 
-        const c = parseFloat(count);
-        const p = parseFloat(price);
-        const t = c * p;
+        const c = parseFloat(count)
+        const p = parseFloat(price)
+        const t = c * p
         if (c > 0) {
           //calcular descuento
-          let np = newPrice ? parseFloat(newPrice) : p;
-          let nt = np * c;
+          let np = newPrice ? parseFloat(newPrice) : p
+          let nt = np * c
 
-          const desc = nt - t;
-          const scalar = nt / t;
+          const desc = nt - t
+          const scalar = nt / t
           if (desc !== 0) {
-            let percent = (scalar * 100 - 100).toFixed(2) + "%";
-            let label = desc < 0 ? "descuento" : "interes";
+            let percent = (scalar * 100 - 100).toFixed(2) + "%"
+            let label = desc < 0 ? "descuento" : "interes"
             customDescuentos.push({
               name: name,
               price: desc,
@@ -59,33 +59,33 @@ export default mov => {
               scalar,
               label,
               type: "custom"
-            });
+            })
           }
 
           //calcular combo
-          let ncombo = null;
+          let ncombo = null
 
           if (combo && nt > 0 && combo.subitems && combo.subitems.length > 0) {
-            const { subitems = [] } = combo;
-            let ntotal = 0;
-            let nsubitems = [];
+            const {subitems = []} = combo
+            let ntotal = 0
+            let nsubitems = []
             for (let i = 0; i < subitems.length; i++) {
-              const { count, name, code, price } = subitems[i];
-              const sbcount = parseFloat(count);
-              const sbprice = parseFloat(price);
-              const sbtotal = sbcount * sbprice;
+              const {count, name, code, price} = subitems[i]
+              const sbcount = parseFloat(count)
+              const sbprice = parseFloat(price)
+              const sbtotal = sbcount * sbprice
               nsubitems.push({
                 count: sbcount,
                 name,
                 code,
                 price: sbprice,
                 total: sbtotal
-              });
-              ntotal += sbtotal;
+              })
+              ntotal += sbtotal
             }
-            const nscalar = ntotal / nt;
-            const ndesc = ntotal - nt;
-            let nlabel = ndesc < 0 ? "descuento" : "interes";
+            const nscalar = ntotal / nt
+            const ndesc = ntotal - nt
+            let nlabel = ndesc < 0 ? "descuento" : "interes"
             customDescuentos.push({
               name: name,
               price: ndesc,
@@ -94,11 +94,11 @@ export default mov => {
               scalar: nscalar,
               label: nlabel + " por combo",
               type: "combo"
-            });
+            })
             ncombo = {
               scalar: nscalar,
               subitems: nsubitems
-            };
+            }
           }
 
           nitems.push({
@@ -114,23 +114,23 @@ export default mov => {
             type,
             tags,
             combo: ncombo
-          });
-          const niva = nt - nt / (1 + iva / 100);
-          ivas[iva + "%"] = ivas[iva + "%"] + niva || niva;
-          subtotal += nt;
+          })
+          const niva = nt - nt / (1 + iva / 100)
+          ivas[iva + "%"] = ivas[iva + "%"] + niva || niva
+          subtotal += nt
         }
       }
 
       //descuentos
       for (let i = 0; i < descuentos.length; i++) {
-        const { price, codes = [], type } = descuentos[i];
-        const d = parseFloat(price);
-        descuentos[i].price = d;
+        const {price, codes = [], type} = descuentos[i]
+        const d = parseFloat(price)
+        descuentos[i].price = d
 
         if (type !== "custom") {
           if (items.filter(i => codes.indexOf(i.code) > -1) > 0) {
-            customDescuentos.push(descuentos[i]);
-            descontado += d;
+            customDescuentos.push(descuentos[i])
+            descontado += d
           }
         }
       }
@@ -144,7 +144,7 @@ export default mov => {
             percent: key,
             label: "impuesto",
             type: "iva"
-          });
+          })
         }
       }
     } else {
@@ -152,18 +152,18 @@ export default mov => {
         index: errors.length,
         type: "warning",
         message: "Aun no agrego productos"
-      });
+      })
     }
   }
 
   //target
-  const destType = getDestTypePerMov(type);
+  const destType = getDestTypePerMov(type)
   if (destType === "desconocido") {
     errors.push({
       index: errors.length,
       type: "error",
       message: "No se reconoce el tipo de movimiento"
-    });
+    })
   } else {
     if (
       isEmpty(target) ||
@@ -172,9 +172,9 @@ export default mov => {
       isEmpty(target.type) ||
       target.type !== destType
     ) {
-      target = {};
+      target = {}
       if (type === "venta") {
-        const { ventaTarget, lastClient } = getConfig();
+        const {ventaTarget, lastClient} = getConfig()
 
         if (ventaTarget === "consumidor") {
           target = {
@@ -182,9 +182,9 @@ export default mov => {
             code: "0000",
             iva: "monotributo",
             type: "cliente"
-          };
+          }
         } else if (ventaTarget === "ultimo") {
-          target = lastClient;
+          target = lastClient
         }
       }
       if (isEmpty(target))
@@ -192,36 +192,36 @@ export default mov => {
           index: errors.length,
           type: "warning",
           message: "Debe asignar un " + destType + " a este movimiento"
-        });
+        })
     }
   }
 
   //factura
   if (type === "pedido" || type === "presupuesto") {
-    factura = "P";
+    factura = "P"
   } else if (type === "deposito" || type === "extraccion") {
-    factura = "R";
+    factura = "R"
   } else if (type === "deposito" || type === "extraccion") {
-    factura = "R";
+    factura = "R"
   } else if (type === "entrada" || type === "salida") {
-    factura = "X";
+    factura = "X"
   }
 
-  let mpagos = calculatePagos(pagos);
-  const pagado = mpagos.pagado;
-  const total = subtotal + descontado;
+  let mpagos = calculatePagos(pagos)
+  const pagado = mpagos.pagado
+  const total = subtotal + descontado
   if (total > pagado) {
     if (type === "venta" && getConfig().autoPagar) {
       mpagos = {
-        efectivo: { total },
+        efectivo: {total},
         pagado: total
-      };
+      }
     } else {
       errors.push({
         index: errors.length,
         type: "warning",
         message: "Faltan realizar pagos"
-      });
+      })
     }
   }
   if (total < pagado) {
@@ -229,22 +229,22 @@ export default mov => {
       index: errors.length,
       type: "warning",
       message: "Falta dar vueltos"
-    });
+    })
   }
   //usuario
-  let createdBy = "origen desconocido";
+  let createdBy = "origen desconocido"
   if (user) {
-    createdBy = "creado por " + user.name;
+    createdBy = "creado por " + user.name
   } else {
     errors.push({
       index: errors.length,
       type: "error",
       message: "no hay un usuario asociado al movimiento"
-    });
+    })
   }
   let ret = {
     items: nitems,
-    name: target.name || "desconocido",
+    name: target ? target.name || "desconocido" : "no hay destinatario",
     subtotal,
     errors,
     target,
@@ -261,6 +261,6 @@ export default mov => {
     factura,
     user,
     createdBy
-  };
-  return ret;
-};
+  }
+  return ret
+}

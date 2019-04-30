@@ -1,8 +1,9 @@
-import React from "react";
-import { Card, Collapse, Icon, Badge, Button, Alert } from "antd";
-import { validateProduct, getStyleByTypeProd } from "./util";
-import Prodview from "./view";
-import ItemInfo from "../mov/itemInfo";
+import React from "react"
+import {Card, Collapse, Icon, Badge, Button, Alert} from "antd"
+import {validateProduct, getStyleByTypeProd} from "./util"
+import {showError} from "../general"
+import Prodview from "./view"
+import ItemInfo from "../mov/itemInfo"
 import {
   List as Lista,
   EditableNumber,
@@ -12,20 +13,20 @@ import {
   HeaderView,
   isEmpty,
   FieldEditor
-} from "../general";
-import PriceEditor from "./priceEditor";
-import Price from "./priceView";
-const Panel = Collapse.Panel;
+} from "../general"
+import PriceEditor from "./priceEditor"
+import Price from "./priceView"
+const Panel = Collapse.Panel
 export default class extends React.Component {
   constructor(props) {
-    super(props);
-    const { product } = props;
+    super(props)
+    const {product} = props
 
-    this.state = product || {};
+    this.state = product || {}
   }
 
   render() {
-    const { dataSource, onSave, onCancel } = this.props;
+    const {onCancel} = this.props
     let {
       name,
       description,
@@ -36,11 +37,10 @@ export default class extends React.Component {
       price = {},
       combo,
       type
-    } = this.state;
-    console.log(this.state)
-    const { total = 0 } = price || {};
-    const errors = validateProduct(this.state) || {};
-    const items = combo ? combo.subitems || [] : [];
+    } = this.state
+    const {total = 0} = price || {}
+    const errors = validateProduct(this.state) || {}
+    const items = combo ? combo.subitems || [] : []
     return (
       <Card
         title={
@@ -94,7 +94,7 @@ export default class extends React.Component {
                 <span>
                   <Icon type="tags" /> Producos del combo{" "}
                   {errors["items"] ? (
-                    <Icon style={{ color: "red" }} type="alert" />
+                    <Icon style={{color: "red"}} type="alert" />
                   ) : null}
                 </span>
               }
@@ -139,7 +139,7 @@ export default class extends React.Component {
                   emptyIcon="shopping-cart"
                   items={items}
                   avatar={item => {
-                    const { metrica, count } = item;
+                    const {metrica, count} = item
                     return (
                       <EditableNumber
                         suffix={metrica}
@@ -148,14 +148,14 @@ export default class extends React.Component {
                         onUpdate={newCount => {
                           for (let i = 0; i < items.length; i++) {
                             if (items[i].code === item.code) {
-                              items[i] = { ...item, count: newCount };
-                              break;
+                              items[i] = {...item, count: newCount}
+                              break
                             }
                           }
-                          this.setState({ combo: { subitems: items } });
+                          this.setState({combo: {subitems: items}})
                         }}
                       />
-                    );
+                    )
                   }}
                   extraList={[
                     item => (
@@ -190,7 +190,7 @@ export default class extends React.Component {
               <span>
                 <Icon type="dollar" /> Precio{" "}
                 {errors["price.total"] ? (
-                  <Icon style={{ color: "red" }} type="alert" />
+                  <Icon style={{color: "red"}} type="alert" />
                 ) : null}
               </span>
             }
@@ -200,7 +200,7 @@ export default class extends React.Component {
             <PriceEditor
               error={errors["price.total"]}
               price={price}
-              onPriceUpdate={p => this.setState({ price: p })}
+              onPriceUpdate={p => this.setState({price: p})}
             />
           </Panel>
           <Panel
@@ -211,17 +211,14 @@ export default class extends React.Component {
             }
             key="2"
             extra={
-              <Badge
-                count={tags.length}
-                style={{ backgroundColor: "#99cc99" }}
-              />
+              <Badge count={tags.length} style={{backgroundColor: "#99cc99"}} />
             }
           >
             <Tags
               editable
               tags={tags}
               dataSource={[]}
-              onListChange={t => this.setState({ tags: t })}
+              onListChange={t => this.setState({tags: t})}
             />
           </Panel>
           <Panel
@@ -234,14 +231,14 @@ export default class extends React.Component {
             extra={
               <Badge
                 count={images.length}
-                style={{ backgroundColor: "#99cc99" }}
+                style={{backgroundColor: "#99cc99"}}
               />
             }
           >
             <Wall
               editable
               files={images}
-              onListChange={t => this.setState({ images: t })}
+              onListChange={t => this.setState({images: t})}
             />
           </Panel>
           <Panel
@@ -254,14 +251,14 @@ export default class extends React.Component {
             extra={
               <Badge
                 count={colors.length}
-                style={{ backgroundColor: "#99cc99" }}
+                style={{backgroundColor: "#99cc99"}}
               />
             }
           >
             <Colors
               colors={colors}
               editable
-              onListChange={c => this.setState({ colors: c })}
+              onListChange={c => this.setState({colors: c})}
             />
           </Panel>
         </Collapse>
@@ -269,14 +266,14 @@ export default class extends React.Component {
           disabled={!isEmpty(errors)}
           type="primary"
           onClick={() => {
-            window.sgapi.saveEntity(this.state, "products");
-            onCancel();
+            window.sgapi.saveEntity(this.state, "products").catch(showError)
+            onCancel()
           }}
           icon="save"
         >
           Guardar
         </Button>
       </Card>
-    );
+    )
   }
 }

@@ -1,7 +1,7 @@
 import React from "react"
 import {Selector, LineView, userPermission} from "../general"
 import {search, getStyleByMovType, MovStyles, createNewMov} from "./util"
-
+import PriceView from "../product/priceView"
 const View = ({showSide, justSelect, onSelect, user}) => {
   const newMov = t => createNewMov(t, user)
   const permission = userPermission(user)
@@ -108,6 +108,7 @@ export default class extends React.Component {
         typeStyler={getStyleByMovType}
         search={search}
         onSelect={onSelect}
+        extraList={[item => <PriceView value={item.total} />]}
       >
         <View {...this.props} />
       </Selector>

@@ -23,8 +23,12 @@ class View extends React.Component {
           disabled={!justSelect && !permission.canAdd}
           ref={r => (this.searchInput = r)}
           onPressEnter={i => {
-            const s = i.target.value
-            const p = s ? data.filter(c => c.code === s)[0] : null
+            const s = i.target.value ? i.target.value.toLowerCase() : false
+            const p = s
+              ? data.filter(c =>
+                  c.code ? c.code.toLowerCase() === s : false
+                )[0]
+              : null
             if (p) {
               onSelect(p)
               this.searchInput.state.value = ""

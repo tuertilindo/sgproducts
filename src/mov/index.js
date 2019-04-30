@@ -7,6 +7,7 @@ import Pagos from "./pagos"
 import Price from "../product/priceView"
 import "../general/decimal.css"
 import {transformMov} from "./util"
+import {showError} from "../general"
 const Panel = Collapse.Panel
 export default class extends React.Component {
   constructor(props) {
@@ -151,7 +152,7 @@ export default class extends React.Component {
           disabled={errors.length > 0}
           type="primary"
           onClick={() => {
-            window.sgapi.saveEntity(this.state, "movs")
+            window.sgapi.saveEntity(this.state, "movs").catch(showError)
             onClose()
           }}
           icon="save"

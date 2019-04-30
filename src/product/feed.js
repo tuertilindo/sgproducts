@@ -1,7 +1,7 @@
 import React from "react"
 import {Input, Spin, Button, Progress, Alert} from "antd"
-import {showError, isEmpty} from "../general"
-import {changePrice, updatePrice} from "./util"
+import {showError} from "../general"
+import {updatePrice} from "./util"
 
 export default class extends React.Component {
   state = {
@@ -42,7 +42,7 @@ export default class extends React.Component {
           type: list[0].type || "producto"
         }
         await this.sleep(50)
-        await window.sgapi.saveEntity(prod, "products")
+        await window.sgapi.saveEntity(prod, "products").catch(showError)
       }
 
       return Promise.resolve(this.task(list.slice(1))).then(
@@ -104,7 +104,7 @@ export default class extends React.Component {
           }}
           icon="save"
         >
-          Guardar
+          Obtener productos
         </Button>
       </Spin>
     )
