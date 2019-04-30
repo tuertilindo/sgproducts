@@ -1,27 +1,27 @@
-import React from "react"
-import {Tabs, BackTop} from "antd"
-import Prodsview from "../product/view"
-import Prodedit from "../product"
-import Clientview from "../client/view"
-import ClientEdit from "../client"
-import UserView from "../user/view"
-import UserEdit from "../user"
-import Movsview from "../mov/view"
-import Movview from "../mov"
-import Config from "./config"
-import Login from "../user/login"
-import {userPermission} from "../general"
-const TabPane = Tabs.TabPane
+import React from "react";
+import { Tabs, BackTop } from "antd";
+import Prodsview from "../product/view";
+import Prodedit from "../product";
+import Clientview from "../client/view";
+import ClientEdit from "../client";
+import UserView from "../user/view";
+import UserEdit from "../user";
+import Movsview from "../mov/view";
+import Movview from "../mov";
+import Config from "./config";
+import Login from "../user/login";
+import { userPermission } from "../general";
+const TabPane = Tabs.TabPane;
 export default class extends React.Component {
   constructor(props) {
-    super(props)
+    super(props);
     this.state = {
       movSelected: null,
       productSelected: null,
       clientSelected: null,
       userSelected: null,
       userLoged: null
-    }
+    };
   }
 
   render() {
@@ -31,14 +31,14 @@ export default class extends React.Component {
       clientSelected,
       userSelected,
       userLoged
-    } = this.state
+    } = this.state;
     if (!userLoged) {
-      return <Login onLogin={u => this.setState({userLoged: u})} />
+      return <Login onLogin={u => this.setState({ userLoged: u })} />;
     }
-    const permission = userPermission(userLoged)
+    const permission = userPermission(userLoged);
     return (
-      <div style={{maxWidth: "640px", display: "block", margin: "auto"}}>
-        <BackTop style={{right: 5}} visibilityHeight={300} />
+      <div style={{ maxWidth: "640px", display: "block", margin: "auto" }}>
+        <BackTop style={{ right: 5 }} visibilityHeight={300} />
 
         <Tabs defaultActiveKey="1">
           <TabPane tab="Movimientos" key="1">
@@ -46,13 +46,13 @@ export default class extends React.Component {
               <Movview
                 user={userLoged}
                 mov={movSelected}
-                onClose={() => this.setState({movSelected: null})}
+                onClose={() => this.setState({ movSelected: null })}
               />
             ) : (
               <div>
                 <Movsview
                   user={userLoged}
-                  onSelect={m => this.setState({movSelected: m})}
+                  onSelect={m => this.setState({ movSelected: m })}
                 />
               </div>
             )}
@@ -61,13 +61,13 @@ export default class extends React.Component {
             {productSelected ? (
               <Prodedit
                 user={userLoged}
-                onCancel={() => this.setState({productSelected: null})}
+                onCancel={() => this.setState({ productSelected: null })}
                 product={productSelected}
               />
             ) : (
               <Prodsview
                 user={userLoged}
-                onSelect={item => this.setState({productSelected: item})}
+                onSelect={item => this.setState({ productSelected: item })}
               />
             )}
           </TabPane>
@@ -76,12 +76,12 @@ export default class extends React.Component {
               <ClientEdit
                 user={userLoged}
                 client={clientSelected}
-                onCancel={() => this.setState({clientSelected: null})}
+                onCancel={() => this.setState({ clientSelected: null })}
               />
             ) : (
               <Clientview
                 user={userLoged}
-                onSelect={item => this.setState({clientSelected: item})}
+                onSelect={item => this.setState({ clientSelected: item })}
               />
             )}
           </TabPane>
@@ -89,13 +89,13 @@ export default class extends React.Component {
             {userSelected ? (
               <UserEdit
                 user={userSelected}
-                onCancel={() => this.setState({userSelected: null})}
+                onCancel={() => this.setState({ userSelected: null })}
               />
             ) : (
               <UserView
                 user={userLoged}
-                onSelect={item => this.setState({userSelected: item})}
-                onLogout={() => this.setState({userLoged: null})}
+                onSelect={item => this.setState({ userSelected: item })}
+                onLogout={() => this.setState({ userLoged: null })}
               />
             )}
           </TabPane>
@@ -104,6 +104,6 @@ export default class extends React.Component {
           </TabPane>
         </Tabs>
       </div>
-    )
+    );
   }
 }

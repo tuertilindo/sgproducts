@@ -1,6 +1,6 @@
 import React from "react"
-import {Selector, LineView, userPermission} from "../general"
-import {Icon, Input} from "antd"
+import {Selector, LineView, userPermission, getThumbnail} from "../general"
+import {Icon, Input, Avatar} from "antd"
 import {search, getStyleByTypeProd, prodStyles, extractCodes} from "./util"
 import PriceView from "./priceView"
 class View extends React.Component {
@@ -84,6 +84,7 @@ export default class extends React.Component {
           combo: "Combos",
           servicio: "Servicios"
         }}
+        avatar={item => <Avatar src={getThumbnail(item)} />}
         typeStyler={getStyleByTypeProd}
         search={search}
         onSelect={onSelect}

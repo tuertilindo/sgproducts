@@ -1,19 +1,18 @@
 import React from "react"
-import { Card, Button, Avatar } from "antd"
-import { validateUser, getStyleByUserType } from "./util"
-import { HeaderView, isEmpty, FieldEditor } from "../general"
+import {Card, Button, Avatar} from "antd"
+import {validateUser, getStyleByUserType} from "./util"
+import {HeaderView, isEmpty, FieldEditor} from "../general"
 export default class extends React.Component {
   constructor(props) {
     super(props)
-    const { user } = props
+    const {user} = props
     this.state = user || {}
   }
-
   render() {
-    const { onCancel } = this.props
-    let { name, email, password, type } = this.state
+    const {onCancel} = this.props
+    let {name, email, password, type} = this.state
     const errors = validateUser(this.state) || {}
-    const { style } = getStyleByUserType(type)
+    const {style} = getStyleByUserType(type)
     return (
       <Card
         title={

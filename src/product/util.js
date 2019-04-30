@@ -1,5 +1,5 @@
-import {searchText} from "../general/"
-const validate = require("validate.js")
+import { searchText } from "../general/";
+const validate = require("validate.js");
 
 const validateProduct = product => {
   const constraints = {
@@ -46,14 +46,34 @@ const validateProduct = product => {
         message: "El producto no tiene precio"
       }
     }
-  }
-  const rest = validate(product, constraints, {fullMessages: false})
+  };
 
-  return rest
-}
+  const rest = validate(product, constraints, { fullMessages: false });
+  if (product.type === "combo") {
+    return {
+      ...rest,
+      ...validate(product, {
+        "combo.subitems": {
+          presence: {
+            allowEmpty: false,
+            message: "El combo no tiene productos"
+          },
+          length: {
+            minimum: 2,
+            maximum: 10,
+            tooLong: "En combo es demasiado largo",
+            tooShort: "Al menos debe tener dos productos en el combo"
+          }
+        }
+      })
+    };
+  }
+
+  return rest;
+};
 
 const search = (l, f) => {
-  const {text, type, tags} = f
+  const { text, type, tags } = f;
 
   return l.filter(i => {
     return (
@@ -62,18 +82,18 @@ const search = (l, f) => {
         searchText(i.name, text) ||
         searchText(i.description, text)) &&
       (!type || type === "all" || type === i.type)
-    )
-  })
-}
+    );
+  });
+};
 
 const extractCodes = prods => {
-  let ret = {}
+  let ret = {};
   for (let i = 0; i < prods.length; i++) {
-    const code = prods[i].code
-    if (code) ret[code] = i
+    const code = prods[i].code;
+    if (code) ret[code] = i;
   }
-  return ret
-}
+  return ret;
+};
 const prodStyles = {
   producto: {
     style: {
@@ -97,7 +117,7 @@ const prodStyles = {
     },
     icon: "safety-certificate"
   }
-}
+};
 
 const getStyleByTypeProd = (type, options) => {
   return (
@@ -108,40 +128,40 @@ const getStyleByTypeProd = (type, options) => {
       },
       icon: "safety-certificate"
     }
-  )
-}
+  );
+};
 
 const changeCost = (price, cost) => {
-  const {gain = 0} = price
-  return {...price, cost, final: cost * (1 + gain / 100)}
-}
+  const { gain = 0 } = price;
+  return { ...price, cost, final: cost * (1 + gain / 100) };
+};
 const changeGain = (price, gain) => {
-  const {cost = 0, dolar = 0} = price
+  const { cost = 0, dolar = 0 } = price;
   return {
     ...price,
     gain,
     final: cost * (1 + gain / 100),
     dolarFinal: dolar * (1 + gain / 100)
-  }
-}
+  };
+};
 const changeDolar = (price, dolar) => {
-  const {gain = 0} = price
-  return {...price, dolar, dolarFinal: dolar * (1 + gain / 100)}
-}
+  const { gain = 0 } = price;
+  return { ...price, dolar, dolarFinal: dolar * (1 + gain / 100) };
+};
 const changePrice = (price, final) => {
-  const {cost = 0, gain = 0} = price
-  const calcFinal = cost * (1 + gain / 100)
+  const { cost = 0, gain = 0 } = price;
+  const calcFinal = cost * (1 + gain / 100);
   if (cost > 0 && gain > 0 && final >= calcFinal) {
-    return {...price, gain: ((final - cost) * 100) / cost, final}
+    return { ...price, gain: ((final - cost) * 100) / cost, final };
   } else if (cost > 0 && gain === 0 && final >= cost) {
-    return {...price, cost: final, final}
+    return { ...price, cost: final, final };
   } else if (cost > 0 && gain === 0 && final < cost) {
-    return {...price, final: cost}
+    return { ...price, final: cost };
   } else if (cost > 0 && gain > 0 && final < calcFinal) {
-    return {...price, final: calcFinal}
+    return { ...price, final: calcFinal };
   }
-  return {...price, gain: 0, final, cost: final}
-}
+  return { ...price, gain: 0, final, cost: final };
+};
 const updatePrice = (price, final) => {
   const {
     dolarizado = false,
@@ -149,19 +169,19 @@ const updatePrice = (price, final) => {
     cotizacion = 0,
     cost = 0,
     gain = 0
-  } = price
-  const calcFinal = cost * (1 + gain / 100)
+  } = price;
+  const calcFinal = cost * (1 + gain / 100);
   if (cost > 0 && gain > 0 && final >= calcFinal) {
-    return {...price, gain: ((final - cost) * 100) / cost, final}
+    return { ...price, gain: ((final - cost) * 100) / cost, final };
   } else if (gain === 0) {
-    return {...price, cost: final, final}
+    return { ...price, cost: final, final };
   } else if (cost > 0 && gain > 0 && final < calcFinal) {
-    return {...price, costo: final / (1 + gain / 100)}
+    return { ...price, costo: final / (1 + gain / 100) };
   }
 
-  const total = dolarizado ? dolarFinal * cotizacion : final
-  return {...price, total}
-}
+  const total = dolarizado ? dolarFinal * cotizacion : final;
+  return { ...price, total };
+};
 
 export {
   changePrice,
@@ -174,4 +194,4 @@ export {
   getStyleByTypeProd,
   prodStyles,
   updatePrice
-}
+};

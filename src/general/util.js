@@ -82,12 +82,13 @@ const roundStyle = {
   borderWidth: "0.5px",
   cursor: "pointer"
 }
-
+const bool = b => b && b.toString().toLowerCase() === "true"
 export {
   isEmpty,
   searchText,
   isEmptyFilter,
   getThumbnail,
   roundStyle,
-  compareFilter
+  compareFilter,
+  bool
 }

@@ -6,7 +6,6 @@ import "./injectActions"
 import Container from "./container"
 const moment = require("moment")
 moment.locale("es")
-
 class App extends React.Component {
   render() {
     return (

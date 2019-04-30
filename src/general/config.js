@@ -1,14 +1,14 @@
-const getConfig = () => {
-  if (!window.sgconfig) {
-    window.sgconfig = window.sgapi.getEntity(0, "config") || {}
-  }
-  return window.sgconfig
+const getConfig = () => window.sgconfig || {}
+const initConfig = () => {
+  return window.sgapi.getConfig().then(c => {
+    window.sgconfig = c
+    return c
+  })
 }
 const saveConfig = config => {
   const cfg = {...getConfig(), ...config}
   window.sgconfig = cfg
-  cfg.code = 0
-  window.sgapi.saveEntity(cfg, "config")
+  window.sgapi.setConfig(config)
 }
 
-export {getConfig, saveConfig}
+export {getConfig, saveConfig, initConfig}

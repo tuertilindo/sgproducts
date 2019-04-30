@@ -17,6 +17,7 @@ export default class extends React.Component {
         window.sgapi
           .logged()
           .then(x => {
+            console.log(x)
             onLogin(x)
             this.setState({loading: false})
           })
@@ -107,7 +108,10 @@ export default class extends React.Component {
                     }
                   })
                   .catch(f =>
-                    this.setState({fail: "No te conozco, Bye", loading: false})
+                    this.setState({
+                      fail: "No te conozco, Bye",
+                      loading: false
+                    })
                   )
                 this.setState({loading: true})
               }

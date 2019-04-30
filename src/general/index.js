@@ -10,9 +10,10 @@ import Colors from "./colors"
 import NameEditor from "./nameEditor"
 import FieldEditor from "./fieldEditor"
 import Selector from "./selector"
-import {getConfig, saveConfig} from "./config"
+import {getConfig, saveConfig, initConfig} from "./config"
 import {
   isEmpty,
+  bool,
   searchText,
   isEmptyFilter,
   getThumbnail,
@@ -23,6 +24,7 @@ import List from "./list"
 import LineView from "./lineView"
 import userPermission from "../user/permission"
 const showError = e => message.error(e.message)
+
 export {
   Filter,
   SidePanel,
@@ -41,10 +43,12 @@ export {
   NameEditor,
   saveConfig,
   getConfig,
+  initConfig,
   FieldEditor,
   Selector,
   compareFilter,
   LineView,
   userPermission,
-  showError
+  showError,
+  bool
 }

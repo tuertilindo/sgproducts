@@ -73,7 +73,22 @@ const api = {
   },
 
   logout: user => {
-    return removeEntity(user.email, "logins")
+    return removeEntity(user.email, "logged")
+  },
+  getConfig: () => {
+    const cf = JSON.parse(localStorage.getItem("config"))
+    return Promise.resolve(cf)
+  },
+  initConfig: () => {
+    const cf = JSON.parse(localStorage.getItem("config"))
+    window.sgconfig = cf
+    return Promise.resolve(cf)
+  },
+  setConfig: cfg => {
+    const cf = JSON.parse(localStorage.getItem("config"))
+    const fcfg = {...cf, ...cfg}
+    localStorage.setItem("config", JSON.stringify(fcfg))
+    return Promise.resolve(fcfg)
   }
 }
 export default api
