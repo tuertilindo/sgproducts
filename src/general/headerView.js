@@ -8,10 +8,12 @@ export default class extends React.Component {
       data = {},
       onClose,
       closeText = "cerrar",
+      closeIcon = "close",
       avatar,
       hideAvatar,
       onEdit,
       editText = "editar",
+      editIcon = "edit",
       extra,
       tag,
       tagStyle
@@ -28,7 +30,7 @@ export default class extends React.Component {
             <Button
               style={{float: "right"}}
               size="small"
-              icon="close"
+              icon={closeIcon}
               shape="circle"
               onClick={() => onClose()}
             />
@@ -39,7 +41,7 @@ export default class extends React.Component {
             <Button
               style={{float: "right"}}
               size="small"
-              icon="edit"
+              icon={editIcon}
               shape="circle"
               onClick={() => onEdit(data)}
             />

@@ -1,36 +1,19 @@
 import React from "react"
-import {Selector, LineView, userPermission} from "../general"
-import {Button, Icon, Tooltip, PageHeader} from "antd"
+import {
+  Selector,
+  LineView,
+  userPermission,
+  SideEditor,
+  HeaderView
+} from "../general"
 import {search, getStyleByClientType, clientStyles} from "./util"
+import Editor from "./index"
 
-const View = ({
-  showSide,
-  title,
-  style,
-  className,
-  user,
-  justSelect,
-  onSelect
-}) => {
+const View = ({showSide, user, justSelect, onSelect, client}) => {
   const permission = userPermission(user)
+  const {type} = client || {}
   return (
     <div>
-      <span style={style} className={className}>
-        {title}
-      </span>
-      <Tooltip
-        title="Cambiar Destinatario"
-        mouseEnterDelay={1}
-        placement="right"
-      >
-        <Button
-          style={{float: "right"}}
-          shape="circle"
-          size="small"
-          onClick={() => showSide(true)}
-          icon="link"
-        />
-      </Tooltip>
       {!justSelect ? (
         <div>
           <LineView
@@ -74,7 +57,22 @@ const View = ({
             customStyle={clientStyles["financiera"]}
           />
         </div>
-      ) : null}
+      ) : (
+        <HeaderView
+          data={client}
+          onClose={() => showSide(true)}
+          closeText={"Cambiar " + type}
+          closeIcon="link"
+          editIcon="edit"
+          extra={
+            <SideEditor title={"Editar " + type} icon="edit">
+              <Editor onSave={onSelect} client={client} />
+            </SideEditor>
+          }
+          tag={type}
+          tagStyle={getStyleByClientType(type).style}
+        />
+      )}
     </div>
   )
 }

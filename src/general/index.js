@@ -10,6 +10,7 @@ import Colors from "./colors"
 import NameEditor from "./nameEditor"
 import FieldEditor from "./fieldEditor"
 import Selector from "./selector"
+import SideEditor from "./sideEditor"
 import {getConfig, saveConfig, initConfig} from "./config"
 import {
   isEmpty,
@@ -46,6 +47,7 @@ export {
   initConfig,
   FieldEditor,
   Selector,
+  SideEditor,
   compareFilter,
   LineView,
   userPermission,

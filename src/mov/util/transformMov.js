@@ -207,24 +207,22 @@ export default mov => {
     factura = "X"
   }
 
-  let mpagos = calculatePagos(pagos)
-  const pagado = mpagos.pagado
   const total = subtotal + descontado
-  if (total > pagado) {
-    if (type === "venta" && getConfig().autoPagar) {
-      mpagos = {
-        efectivo: {total},
-        pagado: total
-      }
-    } else {
-      errors.push({
-        index: errors.length,
-        type: "warning",
-        message: "Faltan realizar pagos"
-      })
+  let mpagos = calculatePagos(pagos)
+  if (type === "venta" && getConfig().autoPagar) {
+    mpagos = {
+      efectivo: {total},
+      pagado: total
     }
   }
-  if (total < pagado) {
+  const pagado = mpagos.pagado
+  if (total > pagado) {
+    errors.push({
+      index: errors.length,
+      type: "warning",
+      message: "Faltan realizar pagos"
+    })
+  } else if (total < pagado) {
     errors.push({
       index: errors.length,
       type: "warning",
@@ -252,7 +250,7 @@ export default mov => {
     descontado,
     descuentos: customDescuentos,
     pagos: mpagos,
-    pagado,
+    pagado: mpagos.pagado,
     status,
     type,
     tags,

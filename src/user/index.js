@@ -9,7 +9,7 @@ export default class extends React.Component {
     this.state = user || {}
   }
   render() {
-    const {onCancel} = this.props
+    const {onClose} = this.props
     let {name, email, password, type} = this.state
     const errors = validateUser(this.state) || {}
     const {style} = getStyleByUserType(type)
@@ -17,7 +17,7 @@ export default class extends React.Component {
       <Card
         title={
           <HeaderView
-            onClose={onCancel}
+            onClose={onClose}
             avatar={<Avatar shape="square" icon="user" />}
             data={{
               name: "USUARIO"
@@ -70,7 +70,7 @@ export default class extends React.Component {
           type="primary"
           onClick={() => {
             window.sgapi.saveEntity(this.state, "users").catch(showError)
-            onCancel()
+            onClose()
           }}
           icon="save"
         >

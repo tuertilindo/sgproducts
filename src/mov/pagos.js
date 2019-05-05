@@ -1,8 +1,8 @@
 import React from "react"
-import { List as Lista } from "../general"
+import {List as Lista, getConfig} from "../general"
 import Price from "../product/priceView"
-import { Button, Icon, Tooltip, Avatar, Popconfirm } from "antd"
-import { getStyleByPay } from "./util"
+import {Button, Icon, Tooltip, Popconfirm} from "antd"
+import {getStyleByPay} from "./util"
 import "../general/decimal.css"
 
 const createButton = (payType, title, enable, onClick) => {
@@ -25,9 +25,10 @@ const createButton = (payType, title, enable, onClick) => {
 }
 export default class extends React.Component {
   render() {
-    const { mov, onUpdate } = this.props
-    const { pagos = {}, total = 0 } = mov
-    const { efectivo, vuelto, tarjeta, cuenta, cheque, pagado } = pagos
+    const {mov, onUpdate} = this.props
+    const {pagos = {}, total = 0} = mov
+    const {efectivo, vuelto, tarjeta, cuenta, cheque, pagado} = pagos
+    const autopagar = getConfig().autoPagar
     let list = []
     if (efectivo)
       list.push({
@@ -40,7 +41,7 @@ export default class extends React.Component {
       <div>
         <Button.Group size="default">
           {createButton("efectivo", "Pagar en efectivo", pagado < total, () =>
-            onUpdate({ ...pagos, efectivo: { total } })
+            onUpdate({...pagos, efectivo: {total}})
           )}
           {createButton("vuelto", "Dar vuelto", pagado > total, () =>
             console.log("efectivo")
@@ -63,17 +64,19 @@ export default class extends React.Component {
           extraList={[
             item => (
               <Popconfirm
-                title="¿Quitar pago?"
+                title={autopagar ? "Autopagar activo" : "¿Quitar pago?"}
                 onConfirm={() => {
                   pagos[item.type] = null
+                  pagos.pagado = 0
                   Promise.resolve(onUpdate(pagos))
                 }}
+                okButtonProps={{disabled: autopagar}}
                 icon={
                   <Icon
                     type="delete"
                     style={{
-                      color: getStyleByPay(item.type, { value: item.price })
-                        .style.color,
+                      color: getStyleByPay(item.type, {value: item.price}).style
+                        .color,
                       borderRadius: "1.2em",
                       borderSize: "1px",
                       borderColor: "red"
@@ -89,8 +92,8 @@ export default class extends React.Component {
                     value={item.price}
                     rounded
                     style={{
-                      color: getStyleByPay(item.type, { value: item.price })
-                        .style.color
+                      color: getStyleByPay(item.type, {value: item.price}).style
+                        .color
                     }}
                   />
                 </span>

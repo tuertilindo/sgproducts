@@ -29,7 +29,8 @@ export default class extends React.Component {
       phone,
       tags = [],
       images = [],
-      type
+      type,
+      loading
     } = this.state
     const errors =
       validateClient({...this.state, email: email === "" ? null : email}) || {}
@@ -142,9 +143,20 @@ export default class extends React.Component {
         <Button
           disabled={!isEmpty(errors)}
           type="primary"
+          loading={loading}
           onClick={() => {
-            window.sgapi.saveEntity(this.state, "clients").catch(showError)
-            onCancel()
+            Promise.resolve(this.setState({loading: true})).then(() => {
+              const {loading, ...other} = this.state
+              window.sgapi
+                .saveEntity(other, "clients")
+                .then(m => {
+                  onCancel()
+                })
+                .catch(e => {
+                  showError(e)
+                  this.setState({loading: false})
+                })
+            })
           }}
           icon="save"
         >

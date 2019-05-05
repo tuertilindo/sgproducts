@@ -74,7 +74,8 @@ export default class extends React.Component {
                   code,
                   name = "desconocido",
                   price = {},
-                  metrica = "u"
+                  metrica = "u",
+                  combo
                 } = prod
                 items.push({
                   count,
@@ -82,7 +83,8 @@ export default class extends React.Component {
                   code,
                   metrica,
                   price: price.final || 0,
-                  total: parseFloat(count) * parseFloat(price)
+                  total: parseFloat(count) * parseFloat(price),
+                  combo
                 })
                 this.setState({items})
               }}
@@ -152,8 +154,10 @@ export default class extends React.Component {
           disabled={errors.length > 0}
           type="primary"
           onClick={() => {
-            window.sgapi.saveEntity(this.state, "movs").catch(showError)
-            onClose()
+            window.sgapi
+              .saveMov(transformMov(this.state))
+              .then(m => onClose())
+              .catch(showError)
           }}
           icon="save"
         >

@@ -2,7 +2,6 @@ import React from "react"
 import "./header.css"
 import {Button, Tooltip, Avatar, Row, Col} from "antd"
 import {getDestTypePerMov, getStyleByMovType} from "./util"
-import {getStyleByClientType} from "../client/util"
 import Client from "../client/view"
 const moment = require("moment")
 export default class extends React.Component {
@@ -10,21 +9,15 @@ export default class extends React.Component {
     const {mov = {}, onClose, onSelect} = this.props
     const {target, type, date, factura, createdBy} = mov
     const client = target || {name: "desconocido", type: "responsable"}
-    const cstyle = getStyleByClientType(client.type)
     const mstyle = getStyleByMovType(type)
 
     return (
       <Row gutter={2}>
-        <Col span={11}>
+        <Col span={15}>
           <Client
             justSelect
+            client={client}
             filter={{type: getDestTypePerMov(type)}}
-            title={
-              <div className="movheader" style={{color: cstyle.style.color}}>
-                <Avatar style={cstyle.style} icon={cstyle.icon} size="small" />
-                <span>{client.name}</span>
-              </div>
-            }
             onSelect={onSelect}
           />
           <div>
@@ -41,7 +34,7 @@ export default class extends React.Component {
             {factura}
           </Avatar>
         </Col>
-        <Col span={9}>
+        <Col span={5}>
           <div className="movheader" style={{color: mstyle.style.color}}>
             <Tooltip
               title="Salir sin guardar"
