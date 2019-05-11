@@ -1,5 +1,13 @@
 import {searchText} from "../../general/"
-import checkIsMercaMov from "./checkIsMercaMov"
+import {
+  checkIsMercaMov,
+  isMoneyIn,
+  isMoneyOut,
+  isMercaOut,
+  isMercaIn,
+  isPresupuestoType
+} from "./checkerMov"
+import extractStock from "./extractStock"
 import transformMov from "./transformMov"
 import getDestTypePerMov from "./getDestTypePerMov"
 import MovStyles from "./movStyles"
@@ -9,9 +17,14 @@ var moment = require("moment")
 const getStyleByMovType = (type, options) => {
   return (
     MovStyles[type] || {
-      background: "#8BBBF7",
-      color: "#465D7B",
-      icon: "read"
+      style: {
+        style: {
+          background: "#8BBBF7",
+          color: "#465D7B",
+          icon: "read"
+        },
+        icon: "roperty-safety"
+      }
     }
   )
 }
@@ -146,6 +159,12 @@ export {
   createNewMov,
   getDestTypePerMov,
   checkIsMercaMov,
+  isMoneyIn,
+  isMoneyOut,
+  isMercaOut,
+  isMercaIn,
+  extractStock,
+  isPresupuestoType,
   getStyleByDesc,
   getStyleByPay,
   MovStyles

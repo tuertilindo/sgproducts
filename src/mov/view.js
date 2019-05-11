@@ -1,5 +1,6 @@
 import React from "react"
 import {Selector, LineView, userPermission} from "../general"
+import {extractMovs} from "../caja/util"
 import {search, getStyleByMovType, MovStyles, createNewMov} from "./util"
 import PriceView from "../product/priceView"
 const View = ({showSide, justSelect, onSelect, user}) => {
@@ -87,7 +88,9 @@ export default class extends React.Component {
     const typeDescr = specificType ? specificType : "movimiento"
     return (
       <Selector
-        target={"movs"}
+        customList={() => {
+          return window.sgapi.getCaja().then(extractMovs)
+        }}
         filter={filter}
         hideType={specificType}
         icon="database"

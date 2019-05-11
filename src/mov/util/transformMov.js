@@ -1,4 +1,4 @@
-import checkIsMercaMov from "./checkIsMercaMov"
+import {checkIsMercaMov} from "./checkerMov"
 import {isEmpty} from "../../general"
 import getDestTypePerMov from "./getDestTypePerMov"
 import calculatePagos from "./calculatePagos"

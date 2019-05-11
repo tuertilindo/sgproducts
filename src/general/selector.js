@@ -16,16 +16,20 @@ export default class extends React.Component {
   }
 
   componentDidMount() {
-    window.sgapi
-      .getEntities(this.targetList)
+    ;(this.props.customList
+      ? this.props.customList()
+      : window.sgapi.getEntities(this.targetList)
+    )
       .then(l => this.setState({data: l}))
       .catch(showError)
   }
   componentDidUpdate(prevProps, prevState) {
     // only update chart if the data has changed
     if (!prevState.showSide && this.state.showSide) {
-      window.sgapi
-        .getEntities(this.targetList)
+      ;(this.props.customList
+        ? this.props.customList()
+        : window.sgapi.getEntities(this.targetList)
+      )
         .then(l => this.setState({data: l}))
         .catch(showError)
     }

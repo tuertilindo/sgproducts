@@ -10,6 +10,7 @@ import Movsview from "../mov/view"
 import Movview from "../mov"
 import Config from "./config"
 import Login from "../user/login"
+import Caja from "../caja"
 import {userPermission} from "../general"
 const TabPane = Tabs.TabPane
 export default class extends React.Component {
@@ -23,7 +24,6 @@ export default class extends React.Component {
       userLoged: null
     }
   }
-
   render() {
     const {
       movSelected,
@@ -50,6 +50,7 @@ export default class extends React.Component {
               />
             ) : (
               <div>
+                <Caja user={userLoged} />
                 <Movsview
                   user={userLoged}
                   onSelect={m => this.setState({movSelected: m})}

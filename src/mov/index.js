@@ -6,8 +6,9 @@ import MovFooter from "./footer"
 import Pagos from "./pagos"
 import Price from "../product/priceView"
 import "../general/decimal.css"
-import {transformMov} from "./util"
+import {transformMov, extractStock} from "./util"
 import {showError} from "../general"
+import StaticView from "./static"
 const Panel = Collapse.Panel
 export default class extends React.Component {
   constructor(props) {
@@ -24,9 +25,19 @@ export default class extends React.Component {
       subtotal = 0,
       descontado,
       pagos,
+      status,
       errors
     } = mymov
     const {onClose} = this.props
+    if (status === "done") {
+      return (
+        <StaticView
+          mov={mymov}
+          onClose={onClose}
+          doEdit={m => this.setState(m)}
+        />
+      )
+    }
     return (
       <div style={{maxWidth: "640px", display: "block", margin: "auto"}}>
         <div>
@@ -154,10 +165,15 @@ export default class extends React.Component {
           disabled={errors.length > 0}
           type="primary"
           onClick={() => {
-            window.sgapi
-              .saveMov(transformMov(this.state))
-              .then(m => onClose())
-              .catch(showError)
+            Promise.resolve(this.setState({loading: true})).then(() => {
+              window.sgapi
+                .saveMov(transformMov({...this.state, status: "done"}))
+                .then(m => this.setState(m))
+                .catch(e => {
+                  showError(e)
+                  this.setState({loading: false})
+                })
+            })
           }}
           icon="save"
         >

@@ -13,6 +13,7 @@ export default user => {
     canSell: mylvl > 0,
     canBuy: mylvl > 2,
     canBack: mylvl > 1,
-    canAdd: mylvl > 2
+    canAdd: mylvl > 2,
+    canOpenCaja: mylvl > 1
   }
 }

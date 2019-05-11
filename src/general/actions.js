@@ -1,4 +1,5 @@
 import {isEmpty} from "./util"
+import {createCaja, calculateStock} from "../caja/util"
 
 const getEntities = (entities, filter) => {
   return new Promise((done, error) => {
@@ -10,6 +11,7 @@ const getEntities = (entities, filter) => {
     }
   })
 }
+
 const getEntity = (key, entities) => {
   return new Promise((done, error) => {
     try {
@@ -21,6 +23,15 @@ const getEntity = (key, entities) => {
       error(e)
     }
   })
+}
+
+const getCaja = user => {
+  let caja = JSON.parse(localStorage.getItem("caja"))
+  if (!caja) {
+    caja = createCaja(user)
+    localStorage.setItem("caja", JSON.stringify(caja))
+  }
+  return Promise.resolve(caja)
 }
 
 const removeEntity = (key, group) => {
@@ -50,6 +61,22 @@ const api = {
       }
     })
   },
+  saveMov: (mymov, status = "done") => {
+    const mov = {...mymov, status}
+    return getCaja().then(c => {
+      let caja = c || {}
+      let movs = caja.movs || {}
+
+      movs[mov.type] = [
+        mov,
+        ...(movs[mov.type] || []).filter(m => m.code !== mov.code)
+      ]
+      caja.movs = movs
+      localStorage.setItem("caja", JSON.stringify(caja))
+      return mov
+    })
+  },
+  getCaja,
   getEntity,
   getEntities,
   removeEntity,

@@ -39,23 +39,25 @@ export default class extends React.Component {
 
     return (
       <div>
-        <Button.Group size="default">
-          {createButton("efectivo", "Pagar en efectivo", pagado < total, () =>
-            onUpdate({...pagos, efectivo: {total}})
-          )}
-          {createButton("vuelto", "Dar vuelto", pagado > total, () =>
-            console.log("efectivo")
-          )}
-          {createButton("tarjeta", "Pagar con tarjeta", false, () =>
-            console.log("efectivo")
-          )}
-          {createButton("cuenta", "Acreditar a cuenta corriente", false, () =>
-            console.log("efectivo")
-          )}
-          {createButton("cheque", "Pagar con cheque", false, () =>
-            console.log("efectivo")
-          )}
-        </Button.Group>
+        {onUpdate ? (
+          <Button.Group size="default">
+            {createButton("efectivo", "Pagar en efectivo", pagado < total, () =>
+              onUpdate({...pagos, efectivo: {total}})
+            )}
+            {createButton("vuelto", "Dar vuelto", pagado > total, () =>
+              console.log("efectivo")
+            )}
+            {createButton("tarjeta", "Pagar con tarjeta", false, () =>
+              console.log("efectivo")
+            )}
+            {createButton("cuenta", "Acreditar a cuenta corriente", false, () =>
+              console.log("efectivo")
+            )}
+            {createButton("cheque", "Pagar con cheque", false, () =>
+              console.log("efectivo")
+            )}
+          </Button.Group>
+        ) : null}
         <Lista
           emptyText="no hizo ningún pago"
           emptyIcon="dollar"
@@ -64,13 +66,19 @@ export default class extends React.Component {
           extraList={[
             item => (
               <Popconfirm
-                title={autopagar ? "Autopagar activo" : "¿Quitar pago?"}
+                title={
+                  onUpdate
+                    ? autopagar
+                      ? "Autopagar activo"
+                      : "¿Quitar pago?"
+                    : item.type
+                }
                 onConfirm={() => {
                   pagos[item.type] = null
                   pagos.pagado = 0
                   Promise.resolve(onUpdate(pagos))
                 }}
-                okButtonProps={{disabled: autopagar}}
+                okButtonProps={{disabled: autopagar || !onUpdate}}
                 icon={
                   <Icon
                     type="delete"

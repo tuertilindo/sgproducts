@@ -9,7 +9,7 @@ export default class extends React.Component {
     const {items, onUpdate, onAdd, onDelete} = this.props
     return (
       <div>
-        <Prodview justSelect onSelect={p => onAdd(p)} />
+        {onAdd ? <Prodview justSelect onSelect={p => onAdd(p)} /> : null}
         <Lista
           emptyText="Aun no agrego ningún producto"
           emptyIcon="shopping-cart"
@@ -21,7 +21,11 @@ export default class extends React.Component {
                 suffix={metrica}
                 title="Cambiar la cantidad"
                 count={count}
-                onUpdate={newCount => onUpdate({...item, count: newCount})}
+                onUpdate={
+                  onUpdate
+                    ? newCount => onUpdate({...item, count: newCount})
+                    : null
+                }
               />
             )
           }}
@@ -38,8 +42,15 @@ export default class extends React.Component {
                     fontWeight: "200"
                   }}
                   count={newPrice > 0 ? newPrice : price}
-                  onUpdate={newPrice =>
-                    onUpdate({...item, newPrice, newTotal: newPrice * count})
+                  onUpdate={
+                    onUpdate
+                      ? newPrice =>
+                          onUpdate({
+                            ...item,
+                            newPrice,
+                            newTotal: newPrice * count
+                          })
+                      : null
                   }
                 />
               )
@@ -64,12 +75,15 @@ export default class extends React.Component {
                       fontWeight: "bold"
                     }}
                     count={newTotal > 0 ? newTotal : total}
-                    onUpdate={newTotal =>
-                      onUpdate({
-                        ...item,
-                        newTotal,
-                        newPrice: newTotal / count
-                      })
+                    onUpdate={
+                      onUpdate
+                        ? newTotal =>
+                            onUpdate({
+                              ...item,
+                              newTotal,
+                              newPrice: newTotal / count
+                            })
+                        : null
                     }
                   />
                 </Badge>
@@ -79,13 +93,15 @@ export default class extends React.Component {
               <ItemInfo
                 item={item}
                 action={
-                  <Button
-                    onClick={() => onDelete(item)}
-                    size="small"
-                    type="danger"
-                  >
-                    quitar
-                  </Button>
+                  onDelete ? (
+                    <Button
+                      onClick={() => onDelete(item)}
+                      size="small"
+                      type="danger"
+                    >
+                      quitar
+                    </Button>
+                  ) : null
                 }
               />
             )

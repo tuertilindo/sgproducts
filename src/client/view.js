@@ -60,14 +60,16 @@ const View = ({showSide, user, justSelect, onSelect, client}) => {
       ) : (
         <HeaderView
           data={client}
-          onClose={() => showSide(true)}
+          onClose={onSelect ? () => showSide(true) : null}
           closeText={"Cambiar " + type}
           closeIcon="link"
           editIcon="edit"
           extra={
-            <SideEditor title={"Editar " + type} icon="edit">
-              <Editor onSave={onSelect} client={client} />
-            </SideEditor>
+            onSelect ? (
+              <SideEditor title={"Editar " + type} icon="edit">
+                <Editor onSave={onSelect} client={client} />
+              </SideEditor>
+            ) : null
           }
           tag={type}
           tagStyle={getStyleByClientType(type).style}
