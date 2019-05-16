@@ -25,13 +25,9 @@ const getEntity = (key, entities) => {
   })
 }
 
-const getCaja = user => {
-  let caja = JSON.parse(localStorage.getItem("caja"))
-  if (!caja) {
-    caja = createCaja(user)
-    localStorage.setItem("caja", JSON.stringify(caja))
-  }
-  return Promise.resolve(caja)
+const getCaja = () => {
+  const c = JSON.parse(localStorage.getItem("caja"))
+  return Promise.resolve(c)
 }
 
 const removeEntity = (key, group) => {
@@ -55,7 +51,7 @@ const api = {
         const entities = JSON.parse(localStorage.getItem(type)) || {}
         entities[key] = entity
         localStorage.setItem(type, JSON.stringify(entities))
-        done()
+        done(entity)
       } catch (e) {
         error(e)
       }
@@ -76,17 +72,34 @@ const api = {
       return mov
     })
   },
+  changeCaja: user => {
+    return getCaja().then(c => {
+      if (c) {
+        const entities = JSON.parse(localStorage.getItem("cajas")) || {}
+        entities[c.code] = c
+        localStorage.setItem("cajas", JSON.stringify(entities))
+      }
+      const caja = createCaja(user)
+      localStorage.setItem("caja", JSON.stringify(caja))
+      return Promise.resolve(caja)
+    })
+  },
   getCaja,
   getEntity,
   getEntities,
   removeEntity,
 
-  login: (email, password) => {
+  login: (email, password, remember) => {
     return getEntities("users").then(usrs => {
       const found = usrs.filter(
         u => u.email === email && u.password === password
       )
-      if (found.length > 0) return Promise.resolve(found[0])
+      if (found.length > 0) {
+        if (remember) {
+          return window.sgapi.saveEntity(found[0], "logged")
+        }
+        return Promise.resolve(found[0])
+      }
       return Promise.reject({message: "Las credenciales no coinciden"})
     })
   },

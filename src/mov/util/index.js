@@ -8,6 +8,8 @@ import {
   isPresupuestoType
 } from "./checkerMov"
 import extractStock from "./extractStock"
+
+import extractPagos from "./extractPagos"
 import transformMov from "./transformMov"
 import getDestTypePerMov from "./getDestTypePerMov"
 import MovStyles from "./movStyles"
@@ -164,6 +166,7 @@ export {
   isMercaOut,
   isMercaIn,
   extractStock,
+  extractPagos,
   isPresupuestoType,
   getStyleByDesc,
   getStyleByPay,

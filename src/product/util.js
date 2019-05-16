@@ -1,5 +1,6 @@
-import { searchText } from "../general/";
-const validate = require("validate.js");
+import {searchText} from "../general/"
+import {calculateStock} from "../caja/util"
+const validate = require("validate.js")
 
 const validateProduct = product => {
   const constraints = {
@@ -46,9 +47,9 @@ const validateProduct = product => {
         message: "El producto no tiene precio"
       }
     }
-  };
+  }
 
-  const rest = validate(product, constraints, { fullMessages: false });
+  const rest = validate(product, constraints, {fullMessages: false})
   if (product.type === "combo") {
     return {
       ...rest,
@@ -66,34 +67,43 @@ const validateProduct = product => {
           }
         }
       })
-    };
+    }
   }
 
-  return rest;
-};
+  return rest
+}
 
 const search = (l, f) => {
-  const { text, type, tags } = f;
-
-  return l.filter(i => {
-    return (
+  const {text, type, tags = [], limit = 10, stock} = f
+  let ret = []
+  let count = 0
+  for (let i = 0; i < l.length; i++) {
+    if (
       (!text ||
         text.length === 0 ||
-        searchText(i.name, text) ||
-        searchText(i.description, text)) &&
-      (!type || type === "all" || type === i.type)
-    );
-  });
-};
+        searchText(l[i].name, text) ||
+        searchText(l[i].description, text) ||
+        tags.filter(t => l[i].tags.indexOf(t) > -1).length > 0) &&
+      (!type || type === "all" || type === l[i].type)
+    ) {
+      ret.push(stock ? {...l[i], stock: stock[l[i].code] || 0} : l[i])
+      count++
+    }
+    if (count >= limit) break
+  }
+  return ret
+}
+
+const stocked = ls => (l, f) => search(l, {...f, stock: ls})
 
 const extractCodes = prods => {
-  let ret = {};
+  let ret = {}
   for (let i = 0; i < prods.length; i++) {
-    const code = prods[i].code;
-    if (code) ret[code] = i;
+    const code = prods[i].code
+    if (code) ret[code] = i
   }
-  return ret;
-};
+  return ret
+}
 const prodStyles = {
   producto: {
     style: {
@@ -117,7 +127,7 @@ const prodStyles = {
     },
     icon: "safety-certificate"
   }
-};
+}
 
 const getStyleByTypeProd = (type, options) => {
   return (
@@ -128,40 +138,40 @@ const getStyleByTypeProd = (type, options) => {
       },
       icon: "safety-certificate"
     }
-  );
-};
+  )
+}
 
 const changeCost = (price, cost) => {
-  const { gain = 0 } = price;
-  return { ...price, cost, final: cost * (1 + gain / 100) };
-};
+  const {gain = 0} = price
+  return {...price, cost, final: cost * (1 + gain / 100)}
+}
 const changeGain = (price, gain) => {
-  const { cost = 0, dolar = 0 } = price;
+  const {cost = 0, dolar = 0} = price
   return {
     ...price,
     gain,
     final: cost * (1 + gain / 100),
     dolarFinal: dolar * (1 + gain / 100)
-  };
-};
-const changeDolar = (price, dolar) => {
-  const { gain = 0 } = price;
-  return { ...price, dolar, dolarFinal: dolar * (1 + gain / 100) };
-};
-const changePrice = (price, final) => {
-  const { cost = 0, gain = 0 } = price;
-  const calcFinal = cost * (1 + gain / 100);
-  if (cost > 0 && gain > 0 && final >= calcFinal) {
-    return { ...price, gain: ((final - cost) * 100) / cost, final };
-  } else if (cost > 0 && gain === 0 && final >= cost) {
-    return { ...price, cost: final, final };
-  } else if (cost > 0 && gain === 0 && final < cost) {
-    return { ...price, final: cost };
-  } else if (cost > 0 && gain > 0 && final < calcFinal) {
-    return { ...price, final: calcFinal };
   }
-  return { ...price, gain: 0, final, cost: final };
-};
+}
+const changeDolar = (price, dolar) => {
+  const {gain = 0} = price
+  return {...price, dolar, dolarFinal: dolar * (1 + gain / 100)}
+}
+const changePrice = (price, final) => {
+  const {cost = 0, gain = 0} = price
+  const calcFinal = cost * (1 + gain / 100)
+  if (cost > 0 && gain > 0 && final >= calcFinal) {
+    return {...price, gain: ((final - cost) * 100) / cost, final}
+  } else if (cost > 0 && gain === 0 && final >= cost) {
+    return {...price, cost: final, final}
+  } else if (cost > 0 && gain === 0 && final < cost) {
+    return {...price, final: cost}
+  } else if (cost > 0 && gain > 0 && final < calcFinal) {
+    return {...price, final: calcFinal}
+  }
+  return {...price, gain: 0, final, cost: final}
+}
 const updatePrice = (price, final) => {
   const {
     dolarizado = false,
@@ -169,19 +179,19 @@ const updatePrice = (price, final) => {
     cotizacion = 0,
     cost = 0,
     gain = 0
-  } = price;
-  const calcFinal = cost * (1 + gain / 100);
+  } = price
+  const calcFinal = cost * (1 + gain / 100)
   if (cost > 0 && gain > 0 && final >= calcFinal) {
-    return { ...price, gain: ((final - cost) * 100) / cost, final };
+    return {...price, gain: ((final - cost) * 100) / cost, final}
   } else if (gain === 0) {
-    return { ...price, cost: final, final };
+    return {...price, cost: final, final}
   } else if (cost > 0 && gain > 0 && final < calcFinal) {
-    return { ...price, costo: final / (1 + gain / 100) };
+    return {...price, costo: final / (1 + gain / 100)}
   }
 
-  const total = dolarizado ? dolarFinal * cotizacion : final;
-  return { ...price, total };
-};
+  const total = dolarizado ? dolarFinal * cotizacion : final
+  return {...price, total}
+}
 
 export {
   changePrice,
@@ -193,5 +203,6 @@ export {
   validateProduct,
   getStyleByTypeProd,
   prodStyles,
-  updatePrice
-};
+  updatePrice,
+  stocked
+}

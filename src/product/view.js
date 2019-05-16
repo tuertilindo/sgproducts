@@ -1,15 +1,17 @@
 import React from "react"
-import {Selector, LineView, userPermission, getThumbnail} from "../general"
+import {
+  Selector,
+  LineView,
+  userPermission,
+  getThumbnail,
+  showError
+} from "../general"
 import {Icon, Input, Avatar} from "antd"
-import {search, getStyleByTypeProd, prodStyles, extractCodes} from "./util"
+import {stocked, getStyleByTypeProd, prodStyles} from "./util"
 import PriceView from "./priceView"
 import StockView from "./stockView"
+import {calculateStock} from "../caja/util"
 class View extends React.Component {
-  constructor(props) {
-    super(props)
-    const {data = []} = props
-    this.codes = extractCodes(data)
-  }
   render() {
     const {showSide, data, onSelect, justSelect, user} = this.props
     const permission = userPermission(user)
@@ -73,8 +75,31 @@ class View extends React.Component {
 }
 
 export default class extends React.Component {
+  constructor(props) {
+    super(props)
+    this.state = {
+      stock: {},
+      loading: false
+    }
+  }
+  componentDidMount() {
+    window.sgapi
+      .getCaja()
+      .then(c =>
+        this.setState({
+          stock: calculateStock(c),
+          loading: false
+        })
+      )
+      .catch(e => {
+        showError(e)
+        this.setState({loading: false})
+      })
+  }
   render() {
     const {onSelect} = this.props
+    const {stock} = this.state
+
     return (
       <Selector
         target="products"
@@ -91,7 +116,7 @@ export default class extends React.Component {
         }}
         avatar={item => <Avatar src={getThumbnail(item)} />}
         typeStyler={getStyleByTypeProd}
-        search={search}
+        search={stocked(stock)}
         onSelect={onSelect}
         extraList={[
           item => <StockView product={item} />,

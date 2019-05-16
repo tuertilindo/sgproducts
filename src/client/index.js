@@ -19,7 +19,7 @@ export default class extends React.Component {
   }
 
   render() {
-    const {onCancel} = this.props
+    const {onClose, onSave} = this.props
     let {
       name,
       description,
@@ -39,7 +39,7 @@ export default class extends React.Component {
       <Card
         title={
           <HeaderView
-            onClose={onCancel}
+            onClose={onClose}
             data={{
               name: name || type,
               description: description,
@@ -147,15 +147,15 @@ export default class extends React.Component {
           onClick={() => {
             Promise.resolve(this.setState({loading: true})).then(() => {
               const {loading, ...other} = this.state
-              window.sgapi
-                .saveEntity(other, "clients")
-                .then(m => {
-                  onCancel()
-                })
-                .catch(e => {
-                  showError(e)
-                  this.setState({loading: false})
-                })
+              if (onSave) {
+                Promise.resolve(onSave(other))
+                  .then(m => onClose())
+                  .catch(e => {
+                    showError(e)
+                    this.setState({loading: false})
+                  })
+              }
+              return Promise.resolve(onClose())
             })
           }}
           icon="save"

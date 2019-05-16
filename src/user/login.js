@@ -1,5 +1,5 @@
 import React from "react"
-import {Card, Button, Avatar, Spin} from "antd"
+import {Card, Button, Avatar, Spin, Alert} from "antd"
 import {validateLoguin} from "./util"
 import {HeaderView, isEmpty, FieldEditor, initConfig} from "../general"
 
@@ -36,6 +36,12 @@ export default class extends React.Component {
     const errors = validateLoguin(this.state) || (fail ? {email: [fail]} : {})
     return (
       <Spin spinning={loading} tip="Iniciando..." delay={200}>
+        <Alert
+          message="Fake admin"
+          description="user: admin@sgcore.com pass: 123456."
+          type="warning"
+          showIcon
+        />
         <Card
           title={
             <HeaderView

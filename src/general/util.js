@@ -18,6 +18,15 @@ const isEmpty = obj => {
   }
   return true
 }
+const sumObj = (a = {}, b = {}) => {
+  let ret = a
+  for (var key in b) {
+    if (b.hasOwnProperty(key)) {
+      ret[key] = (b[key] || 0) + (a[key] || 0)
+    }
+  }
+  return ret
+}
 const isEmptyFilter = f => {
   for (var key in f) {
     if (f.hasOwnProperty(key) && f[key] && f[key].length > 0) return false
@@ -90,5 +99,6 @@ export {
   getThumbnail,
   roundStyle,
   compareFilter,
-  bool
+  bool,
+  sumObj
 }

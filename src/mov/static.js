@@ -72,7 +72,7 @@ export default class extends React.Component {
           type="warning"
           onClick={() => {
             window.sgapi
-              .saveMov(transformMov(mov), "modify")
+              .saveMov(transformMov({...mov, status: "modify"}))
               .then(m => doEdit(m))
               .catch(showError)
           }}

@@ -78,6 +78,7 @@ export default class extends React.Component {
                 user={userLoged}
                 client={clientSelected}
                 onClose={() => this.setState({clientSelected: null})}
+                onSave={c => window.sgapi.saveEntity(c, "clients")}
               />
             ) : (
               <Clientview
