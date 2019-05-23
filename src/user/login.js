@@ -36,12 +36,6 @@ export default class extends React.Component {
     const errors = validateLoguin(this.state) || (fail ? {email: [fail]} : {})
     return (
       <Spin spinning={loading} tip="Iniciando..." delay={200}>
-        <Alert
-          message="Fake admin"
-          description="user: admin@sgcore.com pass: 123456."
-          type="warning"
-          showIcon
-        />
         <Card
           title={
             <HeaderView
@@ -59,6 +53,18 @@ export default class extends React.Component {
             margin: "auto"
           }}
         >
+          <Alert
+            message="Bienvenido a SGCore"
+            description="Version Beta de la aplicacion web para el sitema de gestión SGCore"
+            type="success"
+            showIcon
+          />
+          <Alert
+            message="Fake admin"
+            description="user: admin@sgcore.com pass: 123456. (no puede guardarse)"
+            type="warning"
+            showIcon
+          />
           <FieldEditor
             fields={{
               email: {

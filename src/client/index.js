@@ -145,18 +145,13 @@ export default class extends React.Component {
           type="primary"
           loading={loading}
           onClick={() => {
-            Promise.resolve(this.setState({loading: true})).then(() => {
-              const {loading, ...other} = this.state
-              if (onSave) {
-                Promise.resolve(onSave(other))
-                  .then(m => onClose())
-                  .catch(e => {
-                    showError(e)
-                    this.setState({loading: false})
-                  })
-              }
-              return Promise.resolve(onClose())
-            })
+            Promise.resolve(this.setState({loading: true}))
+              .then(() => {
+                const {loading, ...other} = this.state
+                return Promise.resolve(onSave(other))
+              })
+              .then(() => Promise.resolve(this.setState({loading: false})))
+              .then(() => Promise.resolve(onClose()))
           }}
           icon="save"
         >

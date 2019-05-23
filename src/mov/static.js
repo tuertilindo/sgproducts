@@ -3,16 +3,21 @@ import {Alert, Button, Card} from "antd"
 import MovHeader from "./header"
 import MovItems from "./items"
 import MovFooter from "./footer"
-import Pagos from "./pagos"
+import PagosStatic from "./pagos/static"
 import "../general/decimal.css"
 import {transformMov} from "./util"
 import {showError, EditableNumber} from "../general"
 export default class extends React.Component {
   render() {
     const {doEdit, mov, onClose} = this.props
-    const {items = [], descuentos = [], errors, total, factura} = transformMov(
-      mov
-    )
+    const {
+      items = [],
+      descuentos = [],
+      errors,
+      total,
+      factura,
+      pagos
+    } = transformMov(mov)
 
     return (
       <div style={{maxWidth: "640px", display: "block", margin: "auto"}}>
@@ -65,7 +70,7 @@ export default class extends React.Component {
           </Card>
         ) : null}
         <Card title={"Pagos"} bordered={false}>
-          <Pagos mov={mov} />
+          <PagosStatic pagos={pagos} />
         </Card>
         <Button
           disabled={errors.length > 0}

@@ -5,7 +5,11 @@ import {
   isMoneyOut,
   isMercaOut,
   isMercaIn,
-  isPresupuestoType
+  isMoneyOnly,
+  isPresupuestoType,
+  canPayEfectivo,
+  extractVueltoToPay,
+  payStatus
 } from "./checkerMov"
 import extractStock from "./extractStock"
 
@@ -161,14 +165,18 @@ export {
   createNewMov,
   getDestTypePerMov,
   checkIsMercaMov,
+  isMoneyOnly,
   isMoneyIn,
   isMoneyOut,
   isMercaOut,
   isMercaIn,
+  canPayEfectivo,
+  extractVueltoToPay,
   extractStock,
   extractPagos,
   isPresupuestoType,
   getStyleByDesc,
   getStyleByPay,
-  MovStyles
+  MovStyles,
+  payStatus
 }

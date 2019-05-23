@@ -11,8 +11,7 @@ export default class extends React.Component {
 
   componentDidUpdate(prevProps) {
     const {count} = this.props
-    const {newCount} = this.state
-    if (count !== newCount) {
+    if (count !== prevProps.count) {
       this.setState({newCount: count})
     }
   }
@@ -52,7 +51,7 @@ export default class extends React.Component {
                     style={{width: "130px"}}
                     precision={precision}
                     defaultValue={newCount}
-                    formatter={value => `${prefix}${value}${suffix}`}
+                    formatter={value => `${value}`}
                     parser={value =>
                       value.replace(prefix, "").replace(suffix, "")
                     }

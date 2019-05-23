@@ -15,6 +15,7 @@ import {
 import {search, transformCaja} from "./util"
 import PriceView from "../product/priceView"
 import StockView from "../product/stockView"
+
 const moment = require("moment")
 
 class View extends React.Component {
@@ -70,7 +71,7 @@ class View extends React.Component {
     }
     const permission = userPermission(user)
     const {pagos, title, status, createdAt, createdBy} = caja
-    const {efectivo = 0, tarjeta, cuenta} = pagos || {}
+    const {efectivo = 0, tarjeta, cuenta, cheque} = pagos || {}
     return (
       <div style={{background: "#ECECEC", padding: "10px"}}>
         <Spin spinning={this.state.loading} tip="Obteniendo caja...">
@@ -108,7 +109,7 @@ class View extends React.Component {
             ]}
             footer={
               <Row gutter={{xs: 8, sm: 16, md: 24, lg: 32}}>
-                <Col xs={24} sm={12} md={8} lg={8}>
+                <Col xs={24} sm={12} md={8} lg={6}>
                   <Card>
                     <Statistic
                       title="Efectivo"
@@ -119,7 +120,7 @@ class View extends React.Component {
                     />
                   </Card>
                 </Col>
-                <Col xs={24} sm={12} md={8} lg={8}>
+                <Col xs={24} sm={12} md={8} lg={6}>
                   <Card>
                     <Statistic
                       title="Tarjeta"
@@ -127,11 +128,11 @@ class View extends React.Component {
                       value={tarjeta}
                       precision={2}
                       valueStyle={{color: "#865626"}}
-                      prefix={<Icon type="card" />}
+                      prefix={<Icon type="credit-card" />}
                     />
                   </Card>
                 </Col>
-                <Col xs={24} sm={12} md={8} lg={8}>
+                <Col xs={24} sm={12} md={8} lg={6}>
                   <Card>
                     <Statistic
                       title="Cuentas"
@@ -139,7 +140,19 @@ class View extends React.Component {
                       style={{color: "#aa1100"}}
                       precision={2}
                       valueStyle={{color: "#aa1100"}}
-                      prefix={<Icon type="fire" />}
+                      prefix={<Icon type="bank" />}
+                    />
+                  </Card>
+                </Col>
+                <Col xs={24} sm={12} md={8} lg={6}>
+                  <Card>
+                    <Statistic
+                      title="Cheques"
+                      value={cheque}
+                      style={{color: "#0011aa"}}
+                      precision={2}
+                      valueStyle={{color: "#0011aa"}}
+                      prefix={<Icon type="file-exclamation" />}
                     />
                   </Card>
                 </Col>

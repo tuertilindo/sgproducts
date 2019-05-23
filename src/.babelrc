@@ -1,4 +1,12 @@
-{"plugins": [
-  ["import", { "libraryName": "antd", "style": "css" }, "ant"]  
-]
+{
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd",
+        "style": "css"
+      },
+      "ant"
+    ]
+  ]
 }

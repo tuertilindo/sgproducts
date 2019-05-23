@@ -74,6 +74,14 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             onClick={() => onSelect(newMov("salida"))}
             customStyle={MovStyles["salida"]}
           />
+          <LineView
+            allowed={permission.canBuy}
+            title={"Depositos"}
+            subtitle={"Depositos de dinero en la caja"}
+            onSearch={() => showSide(true, {type: "deposito"})}
+            onClick={() => onSelect(newMov("deposito"))}
+            customStyle={MovStyles["deposito"]}
+          />
         </div>
       ) : null}
     </div>

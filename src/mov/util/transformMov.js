@@ -1,4 +1,4 @@
-import {checkIsMercaMov} from "./checkerMov"
+import {checkIsMercaMov, isMoneyEnvolve, isMoneyOnly} from "./checkerMov"
 import {isEmpty} from "../../general"
 import getDestTypePerMov from "./getDestTypePerMov"
 import calculatePagos from "./calculatePagos"
@@ -216,7 +216,13 @@ export default mov => {
     }
   }
   const pagado = mpagos.pagado
-  if (total > pagado) {
+  if (isMoneyOnly(type) && pagado <= 0) {
+    errors.push({
+      index: errors.length,
+      type: "warning",
+      message: "Faltan realizar pagos"
+    })
+  } else if (total > pagado) {
     errors.push({
       index: errors.length,
       type: "warning",

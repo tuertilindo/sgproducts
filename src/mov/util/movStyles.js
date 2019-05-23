@@ -56,5 +56,19 @@ export default {
       color: "#5F4033"
     },
     icon: "export"
+  },
+  deposito: {
+    style: {
+      background: "#FCCD89",
+      color: "#5F4D33"
+    },
+    icon: "download"
+  },
+  extraccion: {
+    style: {
+      background: "#FCAA89",
+      color: "#5F4033"
+    },
+    icon: "export"
   }
 }

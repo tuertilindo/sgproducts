@@ -16,7 +16,7 @@ export default class extends React.Component {
         <Col span={15}>
           <Client
             justSelect
-            client={client}
+            client={{type: getDestTypePerMov(type), ...client}}
             filter={{type: getDestTypePerMov(type)}}
             onSelect={onSelect}
           />

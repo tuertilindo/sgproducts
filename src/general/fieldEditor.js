@@ -1,5 +1,5 @@
 import React from "react"
-import {Input, Card, Alert, Icon, Select, Switch} from "antd"
+import {Input, Card, Alert, Icon, Select, Switch, InputNumber} from "antd"
 
 const createField = (key, data = {}, onChange, error) => {
   const myOnChange = e => {
@@ -21,6 +21,33 @@ const createField = (key, data = {}, onChange, error) => {
         defaultChecked={data.value}
         onChange={myOnChange}
       />
+    )
+  }
+  if (data.numeric) {
+    return (
+      <div>
+        <h4>
+          <Icon type={data.icon} /> {data.title}
+        </h4>
+        <InputNumber
+          autoFocus
+          min={data.min}
+          max={data.max}
+          style={{
+            width: "100%",
+            height: "55px",
+            fontSize: "32px",
+            fontWeight: "bold"
+          }}
+          precision={data.precision}
+          defaultValue={data.value}
+          parser={value =>
+            value.replace(data.prefix, "").replace(data.suffix, "")
+          }
+          onChange={myOnChange}
+        />
+        {error ? <Alert type="error" message={error[0]} banner /> : null}
+      </div>
     )
   }
   return (

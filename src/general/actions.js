@@ -57,8 +57,7 @@ const api = {
       }
     })
   },
-  saveMov: (mymov, status = "done") => {
-    const mov = {...mymov, status}
+  saveMov: mov => {
     return getCaja().then(c => {
       let caja = c || {}
       let movs = caja.movs || {}
