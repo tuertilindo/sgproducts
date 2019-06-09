@@ -5,7 +5,6 @@ import MovItems from "./items"
 import MovFooter from "./footer"
 import Pagos from "./pagos"
 import Price from "../product/priceView"
-import "../general/decimal.css"
 import {transformMov, isMoneyOnly} from "./util"
 import {showError} from "../general"
 import StaticView from "./static"
@@ -21,13 +20,15 @@ export default class extends React.Component {
     const {
       items = [],
       descuentos = [],
+      impuestos = [],
       total = 0,
       subtotal = 0,
       descontado,
       pagos,
       status,
       errors,
-      type
+      type,
+      ivaTotal
     } = mymov
     const {onClose} = this.props
     if (status === "done") {
@@ -88,13 +89,15 @@ export default class extends React.Component {
                     name = "desconocido",
                     price = {},
                     metrica = "u",
-                    combo
+                    combo,
+                    iva
                   } = prod
                   items.push({
                     count,
                     name,
                     code,
                     metrica,
+                    iva: parseFloat(iva),
                     price: price.final || 0,
                     total: parseFloat(count) * parseFloat(price),
                     combo
@@ -141,7 +144,7 @@ export default class extends React.Component {
                   }
                   this.setState({items})
                 }}
-                descuentos={descuentos}
+                descuentos={[...descuentos, ...impuestos]}
               />
             </Panel>
           ) : null}
@@ -152,13 +155,16 @@ export default class extends React.Component {
               extra={<Price value={total} colored />}
             >
               <Row gutter={48}>
-                <Col span={8}>
+                <Col xs={12} sm={6} md={6} lg={6}>
                   <Price value={subtotal} colored title="Subtotal" />
                 </Col>
-                <Col span={8}>
+                <Col xs={12} sm={6} md={6} lg={6}>
+                  <Price value={ivaTotal} colored title="Inpuestos" />
+                </Col>
+                <Col xs={12} sm={6} md={6} lg={6}>
                   <Price value={descontado} colored title="Descuentos" />
                 </Col>
-                <Col span={8}>
+                <Col xs={12} sm={6} md={6} lg={6}>
                   <Price value={total} colored title="Total" />
                 </Col>
               </Row>

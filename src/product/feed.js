@@ -1,7 +1,7 @@
 import React from "react"
 import {Input, Spin, Button, Progress, Alert} from "antd"
 import {showError} from "../general"
-import {updatePrice} from "./util"
+import {modifyPrice} from "./util"
 
 export default class extends React.Component {
   state = {
@@ -34,7 +34,10 @@ export default class extends React.Component {
             type: "warning"
           }
         }
-        let price = updatePrice(old.price, list[0].Precio || list[0].price || 0)
+        let price = modifyPrice(old.price, {
+          ...old.price,
+          final: list[0].Precio || list[0].price || 0
+        })
         const prod = {
           name: list[0].Nombre || list[0].name || old.name,
           code: code,

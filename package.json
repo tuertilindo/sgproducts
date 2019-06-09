@@ -1,13 +1,13 @@
 {
   "dependencies": {
-    "antd": "latest",
-    "babel-plugin-import": "1.11.0",
-    "bson-objectid": "1.2.4",
+    "antd": "3.18.2",
+    "babel-plugin-import": "1.11.2",
+    "bson-objectid": "1.2.5",
     "fetch": "1.1.0",
     "moment": "2.24.0",
     "react": "latest",
-    "react-color": "2.17.0",
-    "react-dom": "latest",
+    "react-color": "2.17.3",
+    "react-dom": "16.8.6",
     "react-flippy": "0.1.2",
     "validate.js": "0.12.0",
     "victory": "32.2.3"

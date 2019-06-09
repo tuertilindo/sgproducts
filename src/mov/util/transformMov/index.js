@@ -1,8 +1,9 @@
-import {checkIsMercaMov, isMoneyEnvolve, isMoneyOnly} from "./checkerMov"
-import {isEmpty} from "../../general"
-import getDestTypePerMov from "./getDestTypePerMov"
-import calculatePagos from "./calculatePagos"
-import {getConfig} from "../../general/"
+import {checkIsMercaMov, isMoneyOnly} from "../checkerMov"
+import {isEmpty} from "../../../general"
+import getDestTypePerMov from "../getDestTypePerMov"
+import calculatePagos from "../calculatePagos"
+import {getConfig} from "../../../general/"
+import transformItems from "./transformItems"
 export default mov => {
   let {
     items = [],
@@ -20,7 +21,9 @@ export default mov => {
 
   let nitems = []
   let customDescuentos = []
+  let impuestos = []
   let ivas = {}
+  let ivaTotal = 0
   let subtotal = 0
   let descontado = 0
   let errors = []
@@ -37,7 +40,7 @@ export default mov => {
           newPrice,
           combo
         } = items[i]
-
+        iva = parseFloat(iva)
         const c = parseFloat(count)
         const p = parseFloat(price)
         const t = c * p
@@ -105,6 +108,7 @@ export default mov => {
             id: i,
             name,
             code,
+            iva,
             count: c,
             price: p,
             total: t,
@@ -138,7 +142,8 @@ export default mov => {
       //ivas
       for (var key in ivas) {
         if (ivas.hasOwnProperty(key)) {
-          customDescuentos.push({
+          ivaTotal += ivas[key]
+          impuestos.push({
             name: "total de IVA al " + key,
             price: ivas[key],
             percent: key,
@@ -249,14 +254,17 @@ export default mov => {
   let ret = {
     items: nitems,
     name: target ? target.name || "desconocido" : "no hay destinatario",
-    subtotal,
+    subtotal: subtotal - ivaTotal,
     errors,
     target,
     total,
     descontado,
     descuentos: customDescuentos,
+    impuestos,
+    ivaTotal,
     pagos: mpagos,
     pagado: mpagos.pagado,
+
     status,
     type,
     tags,

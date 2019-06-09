@@ -1,7 +1,7 @@
 import React from "react"
 import {Card, Collapse, Icon, Badge, Button, Alert} from "antd"
-import {validateProduct, getStyleByTypeProd} from "./util"
-import {showError} from "../general"
+import {validateProduct, getStyleByTypeProd, modifyPrice} from "./util"
+
 import Prodview from "./view"
 import ItemInfo from "../mov/itemInfo"
 import {
@@ -12,11 +12,25 @@ import {
   Colors,
   HeaderView,
   isEmpty,
+  showError,
   FieldEditor
 } from "../general"
-import PriceEditor from "./priceEditor"
 import Price from "./priceView"
 const Panel = Collapse.Panel
+
+const changeCombo = (items, price) => {
+  let final = 0
+  for (let i = 0; i < items.length; i++) {
+    final += items[i].total
+  }
+  return {
+    combo: {
+      subitems: items
+    },
+    price: modifyPrice(price, {price: {final}})
+  }
+}
+
 export default class extends React.Component {
   constructor(props) {
     super(props)
@@ -118,20 +132,23 @@ export default class extends React.Component {
                 <Prodview
                   justSelect
                   onSelect={p =>
-                    this.setState({
-                      combo: {
-                        subitems: [
+                    this.setState(
+                      changeCombo(
+                        [
+                          //items
                           ...items,
                           {
                             count: 1,
                             name: p.name || "desconocido",
                             code: p.code || "desconocido",
                             price: p.price.final || p.total || 0,
-                            total: p.price.final || p.total || 0
+                            total: p.price.final || p.total || 0,
+                            iva: p.iva
                           }
-                        ]
-                      }
-                    })
+                        ],
+                        price
+                      )
+                    )
                   }
                 />
                 <Lista
@@ -152,7 +169,7 @@ export default class extends React.Component {
                               break
                             }
                           }
-                          this.setState({combo: {subitems: items}})
+                          this.setState(changeCombo(items, price))
                         }}
                       />
                     )
@@ -164,9 +181,12 @@ export default class extends React.Component {
                         action={
                           <Button
                             onClick={() =>
-                              this.setState({
-                                items: items.filter(i => i.code !== item.code)
-                              })
+                              this.setState(
+                                changeCombo(
+                                  items.filter(i => i.code !== item.code),
+                                  price
+                                )
+                              )
                             }
                             size="small"
                             type="danger"
@@ -188,19 +208,83 @@ export default class extends React.Component {
           <Panel
             header={
               <span>
-                <Icon type="dollar" /> Precio{" "}
                 {errors["price.total"] ? (
                   <Icon style={{color: "red"}} type="alert" />
-                ) : null}
+                ) : null}{" "}
+                <Icon
+                  type="fire"
+                  theme="twoTone"
+                  twoToneColor={price.dolarizado ? "#52c41a" : "#1a52c4"}
+                />{" "}
+                Precio
               </span>
             }
             key="1"
             extra={<Price value={total} colored />}
           >
-            <PriceEditor
-              error={errors["price.total"]}
-              price={price}
-              onPriceUpdate={p => this.setState({price: p})}
+            <FieldEditor
+              fields={{
+                dolarizado: {
+                  value: price.dolarizado,
+                  title: "Precio en dolares",
+                  icon: "transaction",
+                  on: "Dolar",
+                  off: "Pesos",
+                  description: " Cambia la moneda"
+                },
+                cost: {
+                  value: price.cost,
+                  title: "Precio de costo",
+                  icon: "fire",
+                  numeric: true,
+                  hidden: price.dolarizado
+                },
+                dolar: {
+                  value: price.dolar || 0,
+                  title: "Costo en Dolares",
+                  icon: "dollar",
+                  numeric: true,
+                  hidden: !price.dolarizado
+                },
+                gain: {
+                  value: price.gain,
+                  title: "Ganancia porcentual",
+                  icon: "percentage",
+                  numeric: true
+                },
+                final: {
+                  value: price.final,
+                  title: "Precio final en pesos",
+                  icon: "dollar",
+                  numeric: true,
+                  hidden: price.dolarizado
+                },
+
+                dolarFinal: {
+                  value: price.dolarFinal || 0,
+                  title: "Precio final en dolares",
+                  icon: "dollar",
+                  numeric: true,
+                  hidden: !price.dolarizado
+                },
+                cotizacion: {
+                  value: price.cotizacion || 1,
+                  title: "Cotización",
+                  icon: "dollar",
+                  numeric: true,
+                  hidden: !price.dolarizado
+                },
+                iva: {
+                  value: price.iva,
+                  title: "IVA",
+                  icon: "percentage",
+                  values: ["21", "10.5"]
+                }
+              }}
+              errors={errors}
+              onChange={o =>
+                this.setState({price: modifyPrice(price, {...price, ...o})})
+              }
             />
           </Panel>
           <Panel

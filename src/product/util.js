@@ -1,5 +1,4 @@
 import {searchText} from "../general/"
-import {calculateStock} from "../caja/util"
 const validate = require("validate.js")
 
 const validateProduct = product => {
@@ -140,57 +139,67 @@ const getStyleByTypeProd = (type, options) => {
     }
   )
 }
-
+const calcTotal = price => {
+  const {dolarizado, dolarFinal = 0, final, cotizacion = 0, iva = 21} = price
+  const total = dolarizado ? dolarFinal * cotizacion : final
+  const ret = {...price, total, tax: total * (iva / 100)}
+  return ret
+}
 const changeCost = (price, cost) => {
   const {gain = 0} = price
-  return {...price, cost, final: cost * (1 + gain / 100)}
+  return calcTotal({...price, cost, final: cost * (1 + gain / 100)})
 }
 const changeGain = (price, gain) => {
   const {cost = 0, dolar = 0} = price
-  return {
+  return calcTotal({
     ...price,
     gain,
     final: cost * (1 + gain / 100),
     dolarFinal: dolar * (1 + gain / 100)
-  }
+  })
 }
 const changeDolar = (price, dolar) => {
   const {gain = 0} = price
-  return {...price, dolar, dolarFinal: dolar * (1 + gain / 100)}
+  return calcTotal({...price, dolar, dolarFinal: dolar * (1 + gain / 100)})
+}
+const changeIva = (price, iva) => {
+  return calcTotal({...price, iva})
 }
 const changePrice = (price, final) => {
-  const {cost = 0, gain = 0} = price
-  const calcFinal = cost * (1 + gain / 100)
-  if (cost > 0 && gain > 0 && final >= calcFinal) {
-    return {...price, gain: ((final - cost) * 100) / cost, final}
-  } else if (cost > 0 && gain === 0 && final >= cost) {
-    return {...price, cost: final, final}
-  } else if (cost > 0 && gain === 0 && final < cost) {
-    return {...price, final: cost}
-  } else if (cost > 0 && gain > 0 && final < calcFinal) {
-    return {...price, final: calcFinal}
+  const {gain = 0} = price
+  if (gain > 0) {
+    //change gain
+    return calcTotal({...price, cost: final / (100 / gain), final})
+  } else {
+    return calcTotal({...price, cost: final, final})
   }
-  return {...price, gain: 0, final, cost: final}
 }
-const updatePrice = (price, final) => {
-  const {
-    dolarizado = false,
-    dolarFinal = 0,
-    cotizacion = 0,
-    cost = 0,
-    gain = 0
-  } = price
-  const calcFinal = cost * (1 + gain / 100)
-  if (cost > 0 && gain > 0 && final >= calcFinal) {
-    return {...price, gain: ((final - cost) * 100) / cost, final}
-  } else if (gain === 0) {
-    return {...price, cost: final, final}
-  } else if (cost > 0 && gain > 0 && final < calcFinal) {
-    return {...price, costo: final / (1 + gain / 100)}
-  }
+const changeFinalDolar = (price, dfinal) => {
+  const {gain = 0} = price
+  return calcTotal({
+    ...price,
+    dolar: dfinal / (1 + gain / 100),
+    dolarFinal: dfinal
+  })
+}
 
-  const total = dolarizado ? dolarFinal * cotizacion : final
-  return {...price, total}
+const modifyPrice = (oldPrice = {}, price) => {
+  const {cost = 0, gain = 0, final = 0, dolar = 0, dolarFinal, iva = 21} =
+    price || {}
+  if (oldPrice.cost !== cost) {
+    return changeCost(oldPrice, cost)
+  } else if (oldPrice.gain !== gain) {
+    return changeGain(oldPrice, gain)
+  } else if (oldPrice.final !== final) {
+    return changePrice(oldPrice, final)
+  } else if (oldPrice.dolar !== dolar) {
+    return changeDolar(oldPrice, dolar)
+  } else if (oldPrice.dolarFinal !== dolarFinal) {
+    return changeFinalDolar(oldPrice, dolarFinal)
+  } else if (oldPrice.iva !== iva) {
+    return changeIva(oldPrice, iva)
+  }
+  return calcTotal(price)
 }
 
 export {
@@ -203,6 +212,6 @@ export {
   validateProduct,
   getStyleByTypeProd,
   prodStyles,
-  updatePrice,
-  stocked
+  stocked,
+  modifyPrice
 }

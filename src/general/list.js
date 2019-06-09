@@ -1,5 +1,5 @@
 import React from "react"
-import { Avatar, Icon, List } from "antd"
+import {Avatar, Icon, List} from "antd"
 
 export default class extends React.Component {
   render() {
@@ -18,8 +18,8 @@ export default class extends React.Component {
       <List
         locale={{
           emptyText: (
-            <div style={{ textAlign: "center" }}>
-              <Icon type={emptyIcon || "robot"} style={{ fontSize: 40 }} />
+            <div style={{textAlign: "center"}}>
+              <Icon type={emptyIcon || "robot"} style={{fontSize: 40}} />
               <p>{emptyText || "No hay items"}</p>
             </div>
           )
@@ -27,12 +27,12 @@ export default class extends React.Component {
         dataSource={items}
         horizontal={horizontal}
         renderItem={item => {
-          const { style, icon } = typeStyler
+          const {style, icon} = typeStyler
             ? typeStyler(item.type)
-            : { style: {}, icon: "smile" }
+            : {style: {}, icon: "smile"}
           return (
             <List.Item
-              style={onSelect ? { cursor: "pointer" } : null}
+              style={onSelect ? {cursor: "pointer"} : null}
               onClick={() => {
                 if (onSelect) {
                   onSelect(item)
