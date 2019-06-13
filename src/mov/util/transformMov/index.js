@@ -1,270 +1,49 @@
-import {checkIsMercaMov, isMoneyOnly} from "../checkerMov"
-import {isEmpty} from "../../../general"
-import getDestTypePerMov from "../getDestTypePerMov"
-import calculatePagos from "../calculatePagos"
-import {getConfig} from "../../../general/"
+import transfromPagos from "./transformPagos"
 import transformItems from "./transformItems"
-export default mov => {
-  let {
-    items = [],
-    descuentos = [],
-    pagos = {},
-    target = {},
-    status,
-    type,
-    tags = [],
-    date,
-    code,
-    factura,
-    user
-  } = mov
+import transformClient from "./transformClient"
+import transUser from "./transformUser"
 
-  let nitems = []
-  let customDescuentos = []
-  let impuestos = []
-  let ivas = {}
-  let ivaTotal = 0
-  let subtotal = 0
+export default mov => {
+  let {status, type, tags = [], date, code} = mov
+
   let descontado = 0
   let errors = []
-  if (checkIsMercaMov(type)) {
-    if (items.length > 0) {
-      //items
-      for (let i = 0; i < items.length; i++) {
-        let {
-          count = 0,
-          price = 0,
-          code = "unknow",
-          name = "unknow",
-          iva = 21,
-          newPrice,
-          combo
-        } = items[i]
-        iva = parseFloat(iva)
-        const c = parseFloat(count)
-        const p = parseFloat(price)
-        const t = c * p
-        if (c > 0) {
-          //calcular descuento
-          let np = newPrice ? parseFloat(newPrice) : p
-          let nt = np * c
-
-          const desc = nt - t
-          const scalar = nt / t
-          if (desc !== 0) {
-            let percent = (scalar * 100 - 100).toFixed(2) + "%"
-            let label = desc < 0 ? "descuento" : "interes"
-            customDescuentos.push({
-              name: name,
-              price: desc,
-              codes: [code],
-              percent,
-              scalar,
-              label,
-              type: "custom"
-            })
-          }
-
-          //calcular combo
-          let ncombo = null
-
-          if (combo && nt > 0 && combo.subitems && combo.subitems.length > 0) {
-            const {subitems = []} = combo
-            let ntotal = 0
-            let nsubitems = []
-            for (let i = 0; i < subitems.length; i++) {
-              const {count, name, code, price} = subitems[i]
-              const sbcount = parseFloat(count)
-              const sbprice = parseFloat(price)
-              const sbtotal = sbcount * sbprice
-              nsubitems.push({
-                count: sbcount,
-                name,
-                code,
-                price: sbprice,
-                total: sbtotal
-              })
-              ntotal += sbtotal
-            }
-            const nscalar = ntotal / nt
-            const ndesc = ntotal - nt
-            let nlabel = ndesc < 0 ? "descuento" : "interes"
-            customDescuentos.push({
-              name: name,
-              price: ndesc,
-              codes: [code],
-              percent: (nscalar * 100 - 100).toFixed(2) + "%",
-              scalar: nscalar,
-              label: nlabel + " por combo",
-              type: "combo"
-            })
-            ncombo = {
-              scalar: nscalar,
-              subitems: nsubitems
-            }
-          }
-
-          nitems.push({
-            id: i,
-            name,
-            code,
-            iva,
-            count: c,
-            price: p,
-            total: t,
-            newPrice: np,
-            newTotal: nt,
-            status,
-            type,
-            tags,
-            combo: ncombo
-          })
-          const niva = nt - nt / (1 + iva / 100)
-          ivas[iva + "%"] = ivas[iva + "%"] + niva || niva
-          subtotal += nt
-        }
-      }
-
-      //descuentos
-      for (let i = 0; i < descuentos.length; i++) {
-        const {price, codes = [], type} = descuentos[i]
-        const d = parseFloat(price)
-        descuentos[i].price = d
-
-        if (type !== "custom") {
-          if (items.filter(i => codes.indexOf(i.code) > -1) > 0) {
-            customDescuentos.push(descuentos[i])
-            descontado += d
-          }
-        }
-      }
-
-      //ivas
-      for (var key in ivas) {
-        if (ivas.hasOwnProperty(key)) {
-          ivaTotal += ivas[key]
-          impuestos.push({
-            name: "total de IVA al " + key,
-            price: ivas[key],
-            percent: key,
-            label: "impuesto",
-            type: "iva"
-          })
-        }
-      }
-    } else {
-      errors.push({
-        index: errors.length,
-        type: "warning",
-        message: "Aun no agrego productos"
-      })
-    }
-  }
-
+  const {
+    total,
+    subtotal,
+    ivaTotal,
+    impuestos,
+    items,
+    descuentos,
+    itemsErrors
+  } = transformItems(mov)
   //target
-  const destType = getDestTypePerMov(type)
-  if (destType === "desconocido") {
-    errors.push({
-      index: errors.length,
-      type: "error",
-      message: "No se reconoce el tipo de movimiento"
-    })
-  } else {
-    if (
-      isEmpty(target) ||
-      isEmpty(target.name) ||
-      isEmpty(target.code) ||
-      isEmpty(target.type) ||
-      target.type !== destType
-    ) {
-      target = {}
-      if (type === "venta") {
-        const {ventaTarget, lastClient} = getConfig()
+  const {target, clientErrors, factura} = transformClient(mov)
+  //pagos
+  const {pagos, payErrors, pagado} = transfromPagos({
+    pagos: mov.pagos,
+    type,
+    total
+  })
+  const {user, createdBy, userErrors} = transUser(mov)
 
-        if (ventaTarget === "consumidor") {
-          target = {
-            name: "Consumidor Final",
-            code: "0000",
-            iva: "monotributo",
-            type: "cliente"
-          }
-        } else if (ventaTarget === "ultimo") {
-          target = lastClient
-        }
-      }
-      if (isEmpty(target))
-        errors.push({
-          index: errors.length,
-          type: "warning",
-          message: "Debe asignar un " + destType + " a este movimiento"
-        })
-    }
-  }
+  errors = [...itemsErrors, ...clientErrors, ...payErrors, ...userErrors]
 
-  //factura
-  if (type === "pedido" || type === "presupuesto") {
-    factura = "P"
-  } else if (type === "deposito" || type === "extraccion") {
-    factura = "R"
-  } else if (type === "deposito" || type === "extraccion") {
-    factura = "R"
-  } else if (type === "entrada" || type === "salida") {
-    factura = "X"
-  }
-
-  const total = subtotal + descontado
-  let mpagos = calculatePagos(pagos)
-  if (type === "venta" && getConfig().autoPagar) {
-    mpagos = {
-      efectivo: {total},
-      pagado: total
-    }
-  }
-  const pagado = mpagos.pagado
-  if (isMoneyOnly(type) && pagado <= 0) {
-    errors.push({
-      index: errors.length,
-      type: "warning",
-      message: "Faltan realizar pagos"
-    })
-  } else if (total > pagado) {
-    errors.push({
-      index: errors.length,
-      type: "warning",
-      message: "Faltan realizar pagos"
-    })
-  } else if (total < pagado) {
-    errors.push({
-      index: errors.length,
-      type: "warning",
-      message: "Falta dar vueltos"
-    })
-  }
   //usuario
-  let createdBy = "origen desconocido"
-  if (user) {
-    createdBy = "creado por " + user.name
-  } else {
-    errors.push({
-      index: errors.length,
-      type: "error",
-      message: "no hay un usuario asociado al movimiento"
-    })
-  }
+
   let ret = {
-    items: nitems,
+    items,
     name: target ? target.name || "desconocido" : "no hay destinatario",
-    subtotal: subtotal - ivaTotal,
+    subtotal,
     errors,
     target,
     total,
     descontado,
-    descuentos: customDescuentos,
+    descuentos,
     impuestos,
     ivaTotal,
-    pagos: mpagos,
-    pagado: mpagos.pagado,
-
+    pagos,
+    pagado,
     status,
     type,
     tags,

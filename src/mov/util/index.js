@@ -17,6 +17,7 @@ import extractPagos from "./extractPagos"
 import transformMov from "./transformMov"
 import getDestTypePerMov from "./getDestTypePerMov"
 import MovStyles from "./movStyles"
+import ProdToMov from "./productToMov"
 const ObjectID = require("bson-objectid")
 var moment = require("moment")
 
@@ -178,5 +179,6 @@ export {
   getStyleByDesc,
   getStyleByPay,
   MovStyles,
-  payStatus
+  payStatus,
+  ProdToMov
 }

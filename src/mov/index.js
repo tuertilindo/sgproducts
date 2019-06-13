@@ -5,7 +5,7 @@ import MovItems from "./items"
 import MovFooter from "./footer"
 import Pagos from "./pagos"
 import Price from "../product/priceView"
-import {transformMov, isMoneyOnly} from "./util"
+import {transformMov, isMoneyOnly, ProdToMov} from "./util"
 import {showError} from "../general"
 import StaticView from "./static"
 const Panel = Collapse.Panel
@@ -83,25 +83,7 @@ export default class extends React.Component {
                   this.setState({items: items.filter(i => i.id !== item.id)})
                 }}
                 onAdd={prod => {
-                  const {
-                    count = 1,
-                    code,
-                    name = "desconocido",
-                    price = {},
-                    metrica = "u",
-                    combo,
-                    iva
-                  } = prod
-                  items.push({
-                    count,
-                    name,
-                    code,
-                    metrica,
-                    iva: parseFloat(iva),
-                    price: price.final || 0,
-                    total: parseFloat(count) * parseFloat(price),
-                    combo
-                  })
+                  items.push(ProdToMov(prod))
                   this.setState({items})
                 }}
                 onUpdate={item => {
