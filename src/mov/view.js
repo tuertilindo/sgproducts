@@ -11,6 +11,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
       {!justSelect ? (
         <div>
           <LineView
+            key="ventas"
             allowed={permission.canSell}
             title={"Ventas"}
             subtitle={"Ventas a clientes"}
@@ -19,6 +20,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["venta"]}
           />
           <LineView
+            key="Devoluciones"
             allowed={permission.canBack}
             title={"Devoluciones"}
             subtitle={"Devolución de mercaderia a clientes"}
@@ -27,6 +29,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["devolucion"]}
           />
           <LineView
+            key="Presupuestos"
             allowed={permission.canSell}
             title={"Presupuestos"}
             subtitle={"Presupuestos a clientes"}
@@ -35,6 +38,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["presupuesto"]}
           />
           <LineView
+            key="Compras"
             allowed={permission.canBuy}
             title={"Compras"}
             subtitle={"Compra a proveedor"}
@@ -43,6 +47,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["compra"]}
           />
           <LineView
+            key="Retornos"
             allowed={permission.canBuy}
             title={"Retornos"}
             subtitle={"Devolución de mercaderia al proveedor"}
@@ -51,6 +56,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["retorno"]}
           />
           <LineView
+            key="Pedidos"
             allowed={permission.canBuy}
             title={"Pedidos"}
             subtitle={"Orden de pedidos al proveedor"}
@@ -59,6 +65,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["pedido"]}
           />
           <LineView
+            key="Entradas"
             allowed={permission.canBuy}
             title={"Entradas"}
             subtitle={"Entrada de mercaderia desde sucursal"}
@@ -67,6 +74,7 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["entrada"]}
           />
           <LineView
+            key="Salidas"
             allowed={permission.canBuy}
             title={"Salidas"}
             subtitle={"Envios de mercaderia a otra sucursal"}
@@ -75,12 +83,22 @@ const View = ({showSide, justSelect, onSelect, user}) => {
             customStyle={MovStyles["salida"]}
           />
           <LineView
+            key="Depositos"
             allowed={permission.canBuy}
             title={"Depositos"}
             subtitle={"Depositos de dinero en la caja"}
             onSearch={() => showSide(true, {type: "deposito"})}
             onClick={() => onSelect(newMov("deposito"))}
             customStyle={MovStyles["deposito"]}
+          />
+          <LineView
+            key="Extraccion"
+            allowed={permission.canBuy}
+            title={"Extracciones"}
+            subtitle={"Extracción de dinero de la caja"}
+            onSearch={() => showSide(true, {type: "extraccion"})}
+            onClick={() => onSelect(newMov("extraccion"))}
+            customStyle={MovStyles["extraccion"]}
           />
         </div>
       ) : null}

@@ -9,11 +9,13 @@ export default class extends React.Component {
       subtitle,
       onSearch,
       onClick,
-      customStyle
+      customStyle,
+      key
     } = this.props
 
     return allowed ? (
       <PageHeader
+        key={key}
         backIcon={<Icon type="search" />}
         onBack={onSearch}
         title={title}

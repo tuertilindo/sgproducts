@@ -1,5 +1,5 @@
 import React from "react"
-import "./header.css"
+import "./headerStyle.css"
 import {Button, Tooltip, Avatar, Row, Col} from "antd"
 import {getDestTypePerMov, getStyleByMovType} from "./util"
 import Client from "../client/view"
